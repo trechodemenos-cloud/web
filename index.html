@@ -118,6 +118,14 @@ h3{font-weight:900;font-size:21px;letter-spacing:-.015em;margin:34px 0 12px}
 .pmeta .st{display:inline-flex;align-items:center;gap:6px;font-weight:600;color:var(--c)}
 .pmeta .st::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c)}
 .badges{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+.badges:empty{display:none}
+.ptag{font-family:var(--f-mono);font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink);border:1.5px solid var(--ink);border-radius:4px;padding:1px 6px}
+.prog{border-style:dashed}
+.seg{display:inline-flex;border:1.5px solid var(--ink);border-radius:999px;overflow:hidden;margin:4px 0 4px}
+.seg button{font:inherit;font-size:14px;font-weight:600;background:var(--sheet);color:var(--ink);border:0;padding:6px 14px;cursor:pointer}
+.seg button+button{border-left:1.5px solid var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.lsec{margin:22px 0 8px;font-size:17px}
 .badge{font-family:var(--f-mono);font-size:11px;font-weight:600;letter-spacing:.03em;border:1.5px solid var(--rule);border-radius:4px;padding:2px 7px;color:var(--ink)}
 details.more{margin-top:8px}
 details.more summary{cursor:pointer;font-size:14px;font-weight:700;color:var(--muted);list-style:none}
@@ -197,7 +205,7 @@ footer a{color:var(--ink);font-weight:700}
     <p><a href="#temas" class="cgo">Comparar a los cuatro por tema →</a></p>
     <h3>Promesas por tema</h3>
     <div class="tscroll"><table class="ttable" id="matrix"></table></div>
-    <p class="sub" style="margin-top:8px;font-size:14px">Número de compromisos de cada partido en cada tema. Pulsa un número para verlos. «—» significa que no ha hecho ninguno de ese tema.</p>
+    <p class="sub" style="margin-top:8px;font-size:14px">El número son los compromisos de campaña de cada partido en cada tema; «+N prog.», las medidas de su programa sobre ese tema. Pulsa para verlos. «—» significa que no hay ninguno.</p>
     <div class="note"><strong>¿Por qué todas están «Pendiente de verificar»?</strong> Son promesas para la próxima legislatura: solo se podrán comprobar cuando empiece. Entonces cada una tendrá su veredicto, con fecha y con la prueba enlazada. Los criterios están en <a href="#metodo">Método</a>.</div>
   </section>
 
@@ -269,7 +277,7 @@ const DATA = [{"id": "C29-PP-01", "p": "PP", "t": "Vivienda", "txt": "Construir 
 const PARTIES = ["SUMAR","PP","PSOE","VOX"]; // orden alfabético por nombre del partido: Frente Amplio, PP, PSOE, VOX
 const CAND = {SUMAR:{n:"Frente Amplio",a:"Frente Amplio",ini:"FA",party:"Frente Amplio",sub:"Incluye a Sumar",cand:"Candidata: Ada Colau"},PP:{n:"Partido Popular",a:"PP",ini:"PP",party:"PP",sub:"PP",cand:"Candidato: Alberto Núñez Feijóo"},PSOE:{n:"Partido Socialista",a:"PSOE",ini:"PSOE",party:"PSOE",sub:"PSOE",cand:"Candidato: Pedro Sánchez"},VOX:{n:"VOX",a:"VOX",ini:"VOX",party:"VOX",sub:"VOX",cand:"Candidato: Santiago Abascal"}};
 const pname = p => CAND[p].party;
-const TEMAS = ["Vivienda","Empleo y pensiones","Impuestos","Sanidad","Inmigración","Energía","Educación","Instituciones y justicia","Otros"];
+const TEMAS = ["Vivienda","Empleo y pensiones","Impuestos","Sanidad","Educación","Familia","Inmigración","Seguridad","Energía","Campo","Infraestructuras","Instituciones y justicia","Otros"];
 const ST = [
   ["Cumplida","ok","Lo prometido está aprobado o ejecutado en lo esencial."],
   ["Parcial","part","Se ha hecho una parte, o con menos alcance del prometido."],
@@ -284,6 +292,11 @@ const KEY = Object.fromEntries(ST.map(s=>[s[0],s[1]]));
 const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmt = d => d? d.split("-").reverse().join("/") : "";
 const ROWS = DATA.filter(r=>r.leg==="XVI");
+/* Medidas de los programas como filas (separadas de la campaña) */
+const PROWS = (()=>{const out=[]; Object.keys(PROGRAMAS).forEach(p=>{const seen={}; PROGRAMAS[p].forEach(m=>{const tot=PROGRAMAS[p].filter(x=>x.n===m.n).length; const k=seen[m.n]=(seen[m.n]||0)+1; out.push({...m,p,kind:"prog",id:`PRG-${p}-${String(m.n).padStart(3,"0")}${tot>1?"abcdefgh"[k-1]:""}`});});}); return out;})();
+const progN = p => new Set((PROGRAMAS[p]||[]).map(m=>m.n)).size;
+const progLink = m => {const I=PROG_INFO[m.p]; return I? (I.pdf? I.url+"#page="+m.pag : I.url) : "#";};
+const relLinks = t => esc(t.replace(/(?<!C29-)\bPP-(\d)/g,"C29-PP-$1")).replace(/C29-[A-Z]+-\d+/g,id=>`<a href="#${id}">${id}</a>`);
 const byDate = (a,b)=>(b.fecha||"").localeCompare(a.fecha||"") || b.id.localeCompare(a.id,undefined,{numeric:true});
 const norm = s => String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
 const slug = t => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-");
@@ -322,74 +335,101 @@ function promHTML(r,withWho){
   </article>`;
 }
 
+function progHTML(m,withWho){
+  return `<article class="prom prog" id="${esc(m.id)}">
+    ${withWho?`<div class="pwho">${iniHTML(m.p)}${esc(CAND[m.p].n)}</div>`:""}
+    <p class="ptxt">${esc(m.txt)}</p>
+    <div class="pmeta"><span class="ptag">En su programa</span><span>Medida ${m.n} · pág. ${m.pag}</span><span>${esc(m.t)}</span></div>
+    <div class="badges">${m.cifra?`<span class="badge">${esc(m.cifra)}</span>`:""}</div>
+    ${m.rel?`<p class="vmeta" style="margin:8px 0 0">Campaña: ${relLinks(m.rel)}</p>`:""}
+    <div class="dlinks" style="margin-top:8px"><a href="${progLink(m)}" rel="noopener">Ver en el programa oficial</a><a class="pid" href="#${esc(m.id)}" title="Enlace directo a esta medida">${esc(m.id)}</a></div>
+  </article>`;
+}
+
 /* Inicio */
 function renderInicio(){
   const temasUsados = TEMAS.filter(t=>ROWS.some(r=>r.t===t));
-  document.getElementById("ini-stats").textContent = `${ROWS.length} compromisos de ${PARTIES.length} partidos, en ${temasUsados.length} temas.`;
+  document.getElementById("ini-stats").textContent = `${ROWS.length} compromisos de campaña y ${PARTIES.reduce((a,p)=>a+progN(p),0)} medidas de programas, de ${PARTIES.length} partidos.`;
   document.getElementById("cgrid").innerHTML = PARTIES.map(p=>{
     const rs=ROWS.filter(r=>r.p===p).sort(byDate), last=rs[0];
     const ts=TEMAS.filter(t=>rs.some(r=>r.t===t));
     return `<a class="ccard" href="#${p.toLowerCase()}">
       <div class="chead">${iniHTML(p)}<div><div class="cname">${esc(CAND[p].n)}</div><div class="cparty">${esc(CAND[p].cand)}</div></div></div>
-      <div><span class="cnum">${rs.length}</span><small class="muted"> ${rs.length===1?"promesa":"promesas"} · ${ts.length} ${ts.length===1?"tema":"temas"}</small></div>
+      <div><span class="cnum">${rs.length}</span><small class="muted"> en campaña · ${ts.length} ${ts.length===1?"tema":"temas"}</small></div>
+      <div class="muted" style="font-size:14px;margin-top:-4px">${PROG_INFO[p]?`<b style="color:var(--ink)">${progN(p)}</b> medidas en su programa`:"Programa: pendiente"}</div>
       ${last?`<div class="clast"><b>LA ÚLTIMA · ${fmt(last.fecha)}</b>${esc(last.txt)}</div>`:`<div class="clast muted">Aún sin promesas apuntadas.</div>`}
       <span class="cgo">Ver sus promesas →</span></a>`;}).join("");
   document.getElementById("latest").innerHTML = [...ROWS].sort(byDate).slice(0,5).map(r=>promHTML(r,true)).join("");
-  document.getElementById("matrix").innerHTML = `<thead><tr><th scope="col">Tema</th>${PARTIES.map(p=>`<th scope="col">${esc(CAND[p].a)}</th>`).join("")}</tr></thead><tbody>${TEMAS.map(t=>`<tr><th scope="row" style="text-align:left;font-family:inherit;font-size:15px;text-transform:none;letter-spacing:0;color:var(--ink);font-weight:500;border-bottom:1px solid var(--rule)"><a href="#tema/${slug(t)}" style="font-weight:500">${esc(t)}</a></th>${PARTIES.map(p=>{const n=ROWS.filter(r=>r.p===p&&r.t===t).length;return `<td>${n?`<a href="#${p.toLowerCase()}/${slug(t)}" aria-label="${n} de ${esc(CAND[p].a)} sobre ${esc(t)}">${n}</a>`:'<span class="zero" aria-label="ninguna">—</span>'}</td>`;}).join("")}</tr>`).join("")}</tbody>`;
+  document.getElementById("matrix").innerHTML = `<thead><tr><th scope="col">Tema</th>${PARTIES.map(p=>`<th scope="col">${esc(CAND[p].a)}</th>`).join("")}</tr></thead><tbody>${TEMAS.filter(t=>ROWS.some(r=>r.t===t)||PROWS.some(m=>m.t===t)).map(t=>`<tr><th scope="row" style="text-align:left;font-family:inherit;font-size:15px;text-transform:none;letter-spacing:0;color:var(--ink);font-weight:500;border-bottom:1px solid var(--rule)"><a href="#tema/${slug(t)}" style="font-weight:500">${esc(t)}</a></th>${PARTIES.map(p=>{const n=ROWS.filter(r=>r.p===p&&r.t===t).length, k=PROWS.filter(m=>m.p===p&&m.t===t).length;return `<td>${n||k?`<a href="#${p.toLowerCase()}/${slug(t)}" aria-label="${n} en campaña y ${k} en el programa de ${esc(CAND[p].a)} sobre ${esc(t)}">${n||`<span style="display:inline-block;text-decoration:none;color:var(--muted)">—</span>`}${k?`<small style="display:block;font-size:11px;font-weight:500">+${k} prog.</small>`:""}</a>`:'<span class="zero" aria-label="ninguna">—</span>'}</td>`;}).join("")}</tr>`).join("")}</tbody>`;
 }
 
 /* Candidato */
-let cstate = {p:null,t:"todos",q:""};
+let cstate = {p:null,t:"todos",q:"",k:"todo"};
 function renderCand(p,t){
-  if(cstate.p!==p) cstate={p,t:"todos",q:""};
+  if(cstate.p!==p) cstate={p,t:"todos",q:"",k:"todo"};
   if(t) cstate.t=t;
-  const rs=ROWS.filter(r=>r.p===p);
-  const ts=TEMAS.filter(x=>rs.some(r=>r.t===x));
+  const rs=ROWS.filter(r=>r.p===p), ms=PROWS.filter(m=>m.p===p);
+  const pool=()=>[...(cstate.k!=="programa"?rs:[]),...(cstate.k!=="campana"?ms:[])];
+  const ts=TEMAS.filter(x=>pool().some(r=>r.t===x));
   const v=document.getElementById("v-cand");
   v.innerHTML = `
-    <div class="chead" style="margin-bottom:10px">${iniHTML(p,"big")}<div><h2 style="margin:0">${esc(CAND[p].n)}</h2><div class="cparty" style="font-size:16px">${esc(CAND[p].cand)} · ${rs.length} compromisos de campaña en ${ts.length} ${ts.length===1?"tema":"temas"}</div></div></div>
-    <p class="sub">Ordenados del más reciente al más antiguo. Pulsa «Ver detalles» para ver lo que dijo, palabra por palabra, y la fuente. También: <a href="#c-programa">su programa electoral</a> · <a href="#c-votos">cómo ha votado su grupo</a>.</p>
+    <div class="chead" style="margin-bottom:10px">${iniHTML(p,"big")}<div><h2 style="margin:0">${esc(CAND[p].n)}</h2><div class="cparty" style="font-size:16px">${esc(CAND[p].cand)} · ${rs.length} compromisos de campaña · ${PROG_INFO[p]?progN(p)+" medidas de su programa":"programa pendiente"}</div></div></div>
+    <p class="sub">Primero lo dicho en campaña, del más reciente al más antiguo; después, las medidas concretas de su programa electoral. Pulsa «Ver detalles» para ver la cita y la fuente. También: <a href="#c-votos">cómo ha votado su grupo</a>.</p>
+    <div class="seg" role="group" aria-label="Qué mostrar">
+      <button data-k="todo" aria-pressed="${cstate.k==="todo"}">Todo</button><button data-k="campana" aria-pressed="${cstate.k==="campana"}">Campaña <b>${rs.length}</b></button><button data-k="programa" aria-pressed="${cstate.k==="programa"}">Programa <b>${PROG_INFO[p]?progN(p):"—"}</b></button>
+    </div>
     <div class="chips" role="group" aria-label="Filtrar por tema">
-      <button class="chip" data-t="todos" aria-pressed="${cstate.t==="todos"}">Todos <b>${rs.length}</b></button>
-      ${ts.map(x=>`<button class="chip" data-t="${slug(x)}" aria-pressed="${cstate.t===slug(x)}">${esc(x)} <b>${rs.filter(r=>r.t===x).length}</b></button>`).join("")}
+      <button class="chip" data-t="todos" aria-pressed="${cstate.t==="todos"}">Todos <b>${pool().length}</b></button>
+      ${ts.map(x=>`<button class="chip" data-t="${slug(x)}" aria-pressed="${cstate.t===slug(x)}">${esc(x)} <b>${pool().filter(r=>r.t===x).length}</b></button>`).join("")}
     </div>
     <div class="filters"><input id="cq" type="search" placeholder="Buscar en sus promesas" aria-label="Buscar en las promesas de ${esc(CAND[p].n)}" value="${esc(cstate.q)}"></div>
     <p class="count" id="ccount"></p>
     <div class="plist2" id="clist"></div>
-    <h3 id="c-programa">Programa electoral</h3>${progBody(p)}
     <div id="c-votos">${votosParty(p)}</div>`;
+  v.querySelectorAll(".seg button").forEach(b=>b.addEventListener("click",()=>{cstate.k=b.dataset.k; if(cstate.t!=="todos"&&!pool().some(r=>slug(r.t)===cstate.t)) cstate.t="todos"; renderCand(p);}));
   v.querySelectorAll(".chip[data-t]").forEach(b=>b.addEventListener("click",()=>{cstate.t=b.dataset.t; history.replaceState(null,"","#"+p.toLowerCase()+(cstate.t==="todos"?"":"/"+cstate.t)); renderCand(p);}));
   const q=v.querySelector("#cq"); q.addEventListener("input",()=>{cstate.q=q.value; renderCList(p);});
   renderCList(p);
 }
+function progHead(p){
+  const I=PROG_INFO[p];
+  if(!I) return `<p class="progpend">${PROG_PEND}.</p><p class="vmeta">Lo añadiremos en cuanto lo revisemos sobre el documento oficial publicado por el partido, con el mismo criterio que al resto.</p>`;
+  return `<p class="vmeta" style="margin:0 0 10px">«${esc(I.titulo)}», presentado el ${I.presentado}: ${I.total} medidas en ${I.paginas} páginas. Aquí van solo las ${progN(p)} concretas y medibles. <a href="${I.url}" rel="noopener">${I.pdf?"Programa oficial (PDF)":"Presentación oficial"}</a>.${I.noFiguran.length?` Prometido en campaña pero no figura en el programa: ${I.noFiguran.map(x=>esc(x)).join("; ")}.`:""}</p>`;
+}
 function renderCList(p){
   const q=norm(cstate.q.trim());
-  let rs=ROWS.filter(r=>r.p===p&&(cstate.t==="todos"||slug(r.t)===cstate.t));
-  if(q) rs=rs.filter(r=>norm(r.txt+" "+r.nota+" "+r.lugar+" "+r.t).includes(q));
-  rs.sort(byDate);
-  document.getElementById("ccount").textContent = `${rs.length} ${rs.length===1?"promesa":"promesas"}`;
-  document.getElementById("clist").innerHTML = rs.length? rs.map(r=>promHTML(r,false)).join("") : `<p class="empty">No hay promesas con ese filtro.</p>`;
+  const ok=r=>(cstate.t==="todos"||slug(r.t)===cstate.t)&&(!q||norm(r.txt+" "+(r.nota||"")+" "+(r.lugar||"")+" "+r.t+" "+(r.cifra||"")+" "+(r.rel||"")).includes(q));
+  const rs=cstate.k!=="programa"? ROWS.filter(r=>r.p===p&&ok(r)).sort(byDate) : [];
+  const ms=cstate.k!=="campana"? PROWS.filter(m=>m.p===p&&ok(m)) : [];
+  const n=rs.length+ms.length;
+  document.getElementById("ccount").textContent = cstate.k==="todo"? `${rs.length} de campaña · ${ms.length} del programa` : `${n} ${n===1?"resultado":"resultados"}`;
+  let h="";
+  if(cstate.k!=="programa") h+=(cstate.k==="todo"?`<h3 class="lsec">Dicho en campaña</h3>`:"")+(rs.length? rs.map(r=>promHTML(r,false)).join("") : `<p class="empty">No hay compromisos de campaña con ese filtro.</p>`);
+  if(cstate.k!=="campana") h+=`<h3 class="lsec" id="c-programa">En su programa electoral</h3>`+progHead(p)+(PROG_INFO[p]? (ms.length? ms.map(m=>progHTML(m,false)).join("") : `<p class="empty">No hay medidas del programa con ese filtro.</p>`) : "");
+  document.getElementById("clist").innerHTML = h;
 }
 
 /* Por tema */
 function renderTemas(ts){
-  const usados=TEMAS.filter(t=>ROWS.some(r=>r.t===t));
+  const all=t=>ROWS.filter(r=>r.t===t).length+PROWS.filter(m=>m.t===t).length;
+  const usados=TEMAS.filter(t=>all(t));
   const cur = usados.find(t=>slug(t)===ts) || usados[0];
-  document.getElementById("tchips").innerHTML = TEMAS.map(t=>{const n=ROWS.filter(r=>r.t===t).length;
-    return n?`<a class="chip" href="#tema/${slug(t)}" ${t===cur?'aria-current="page"':""}>${esc(t)} <b>${n}</b></a>`:`<span class="chip" style="opacity:.55;cursor:default" title="Ningún partido ha hecho aún promesas de este tema">${esc(t)} <b>0</b></span>`;}).join("");
+  document.getElementById("tchips").innerHTML = TEMAS.filter(t=>all(t)).map(t=>`<a class="chip" href="#tema/${slug(t)}" ${t===cur?'aria-current="page"':""}>${esc(t)} <b>${all(t)}</b></a>`).join("");
   document.getElementById("tcols").innerHTML = PARTIES.map(p=>{
-    const rs=ROWS.filter(r=>r.p===p&&r.t===cur).sort(byDate);
-    return `<div><div class="colh">${iniHTML(p)}<div><div class="cname">${esc(CAND[p].n)}</div><div class="cparty">${rs.length} ${rs.length===1?"compromiso":"compromisos"}</div></div></div>
-      ${rs.length? rs.map(r=>`<div class="mini">${esc(r.txt)}<div class="pmeta">${fmt(r.fecha)} · ${esc(r.acto)} · <a href="#${esc(r.id)}">detalles</a></div></div>`).join("") : `<p class="none">Sin promesas sobre ${esc(cur.toLowerCase())} por ahora.</p>`}</div>`;}).join("");
+    const rs=ROWS.filter(r=>r.p===p&&r.t===cur).sort(byDate), ms=PROWS.filter(m=>m.p===p&&m.t===cur);
+    return `<div><div class="colh">${iniHTML(p)}<div><div class="cname">${esc(CAND[p].n)}</div><div class="cparty">${rs.length} en campaña · ${PROG_INFO[p]?ms.length+" en el programa":"programa pendiente"}</div></div></div>
+      ${rs.length? rs.map(r=>`<div class="mini">${esc(r.txt)}<div class="pmeta">${fmt(r.fecha)} · ${esc(r.acto)} · <a href="#${esc(r.id)}">detalles</a></div></div>`).join("") : `<p class="none">Sin compromisos de campaña sobre ${esc(cur.toLowerCase())} por ahora.</p>`}
+      ${ms.map(m=>`<div class="mini prog">${esc(m.txt)}<div class="pmeta"><span class="ptag">Programa</span> Medida ${m.n} · <a href="#${esc(m.id)}">detalles</a></div></div>`).join("")}</div>`;}).join("");
 }
 
 /* Búsqueda global */
 function renderBuscar(q){
   const s=norm(q.trim());
   const rs = s? ROWS.filter(r=>norm(r.txt+" "+r.nota+" "+r.lugar+" "+r.t+" "+CAND[r.p].n+" "+CAND[r.p].party+" "+(r.quien||"")).includes(s)) : [];
+  const ps = s? PROWS.filter(m=>norm(m.txt+" "+m.t+" "+(m.cifra||"")+" "+CAND[m.p].n+" "+CAND[m.p].party).includes(s)) : [];
   rs.sort((a,b)=>PARTIES.indexOf(a.p)-PARTIES.indexOf(b.p)||byDate(a,b));
-  document.getElementById("bcount").textContent = s? `${rs.length} ${rs.length===1?"resultado":"resultados"} para «${q.trim()}», en el orden de siempre por partido.` : "Escribe algo en el buscador.";
-  document.getElementById("blist").innerHTML = rs.map(r=>promHTML(r,true)).join("") || (s?`<p class="empty">Nada por ahora. Prueba con otra palabra.</p>`:"");
+  document.getElementById("bcount").textContent = s? `${rs.length+ps.length} ${rs.length+ps.length===1?"resultado":"resultados"} para «${q.trim()}» (${rs.length} de campaña y ${ps.length} de programas), en el orden de siempre por partido.` : "Escribe algo en el buscador.";
+  document.getElementById("blist").innerHTML = PARTIES.map(p=>rs.filter(r=>r.p===p).map(r=>promHTML(r,true)).join("")+ps.filter(m=>m.p===p).map(m=>progHTML(m,true)).join("")).join("") || (s?`<p class="empty">Nada por ahora. Prueba con otra palabra.</p>`:"");
 }
 
 /* Programas y votaciones */
@@ -450,8 +490,10 @@ function route(){
   const raw=decodeURIComponent((location.hash||"#inicio").slice(1));
   const h=raw.toLowerCase(), [a,b]=h.split("/");
   const promo=ROWS.find(r=>r.id.toLowerCase()===h);
-  if(promo){ renderCand(promo.p); show("v-cand",promo.p.toLowerCase());
+  if(promo){ if(cstate.p===promo.p){cstate.k="todo";cstate.t="todos";cstate.q="";} renderCand(promo.p); show("v-cand",promo.p.toLowerCase());
     const el=document.getElementById(promo.id); if(el){el.querySelector("details").open=true; setTimeout(()=>el.scrollIntoView({block:"start"}),30);} return; }
+  const pm=PROWS.find(m=>m.id.toLowerCase()===h);
+  if(pm){ cstate={p:pm.p,t:"todos",q:"",k:"programa"}; renderCand(pm.p); show("v-cand",pm.p.toLowerCase()); const el=document.getElementById(pm.id); if(el) setTimeout(()=>el.scrollIntoView({block:"start"}),30); return; }
   const p=PARTIES.find(x=>x.toLowerCase()===a);
   if(p){ renderCand(p,b||"todos"); show("v-cand",a); window.scrollTo(0,0); return; }
   if(a==="tema"||a==="temas"){ renderTemas(b); show("v-temas","temas"); return; }
@@ -459,7 +501,7 @@ function route(){
   if(a==="buscar"){ const q=raw.slice(7); document.getElementById("gq").value=q; renderBuscar(q); show("v-buscar",""); return; }
   if(a==="votaciones"){ renderVotos(b||"todos"); show("v-votaciones","votaciones"); window.scrollTo(0,0); return; }
   if(["programas","metodo"].includes(a)){ show("v-"+a,a); window.scrollTo(0,0); return; }
-  if(a==="c-programa"||a==="c-votos"){ return; }
+  if(a==="c-programa"||a==="c-votos"){ const el=document.getElementById(a); if(el) el.scrollIntoView({block:"start"}); return; }
   if(a==="resumen") { history.replaceState(null,"","#inicio"); }
   show("v-inicio","inicio");
 }
