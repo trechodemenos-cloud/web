@@ -8,6 +8,7 @@
 <meta property="og:title" content="TrechoDeMenos · Lo que va del dicho al hecho">
 <meta property="og:description" content="Las promesas de los cuatro partidos al 29-N, con fecha, lugar y fuente.">
 <meta property="og:url" content="https://trechodemenos.es/">
+<meta property="og:image" content="https://trechodemenos.es/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%22200%20250%20680%20580%22%3E%3Crect%20x%3D%22200%22%20y%3D%22250%22%20width%3D%22170%22%20height%3D%22580%22%20fill%3D%22%2314181f%22/%3E%3Crect%20x%3D%22710%22%20y%3D%22250%22%20width%3D%22170%22%20height%3D%22580%22%20fill%3D%22%2314181f%22/%3E%3Crect%20x%3D%22370%22%20y%3D%22460%22%20width%3D%22230%22%20height%3D%22160%22%20fill%3D%22%23FFD60A%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -119,6 +120,10 @@ h3{font-weight:900;font-size:21px;letter-spacing:-.015em;margin:34px 0 12px}
 .pmeta .st::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c)}
 .badges{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
 .badges:empty{display:none}
+.g{border-bottom:1.5px dotted currentColor;cursor:help;position:relative}
+.g:hover::after,.g:focus::after{content:attr(data-g);position:absolute;left:0;top:calc(100% + 6px);z-index:50;width:max-content;max-width:min(340px,82vw);background:var(--ink);color:var(--paper);font:400 14px/1.4 var(--f-sans,inherit);letter-spacing:0;text-transform:none;padding:9px 11px;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.18);white-space:normal}
+.g:focus{outline:2px solid var(--hl);outline-offset:1px}
+dl.glos dt{font-weight:700;margin-top:10px}dl.glos dd{margin:2px 0 0;color:var(--muted)}
 .ptag{font-family:var(--f-mono);font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink);border:1.5px solid var(--ink);border-radius:4px;padding:1px 6px}
 .prog{border-style:dashed}
 .seg{display:inline-flex;border:1.5px solid var(--ink);border-radius:999px;overflow:hidden;margin:4px 0 4px}
@@ -247,6 +252,9 @@ footer a{color:var(--ink);font-weight:700}
     <div class="stdef" id="stdef"></div>
     <h3>Cuando una promesa se queda «Impulsada sin éxito»</h3>
     <p class="sub">Cada ficha indica cómo terminó (rechazada en votación, decreto no convalidado, bloqueada en trámite, decaída por la disolución de las Cortes o aprobada pero sin obligar al Gobierno) y quién la frenó, con el voto de cada grupo y, como motivo, solo lo que cada grupo dijo en público. Si el propio partido que la prometía ayudó a frenarla, también figura.</p>
+    <h3>Glosario parlamentario</h3>
+    <p>En las votaciones, los términos subrayados con puntos muestran su explicación al pasar el ratón o tocarlos.</p>
+    <dl class="glos" id="glosario"></dl>
     <h3>Reglas</h3>
     <ol class="rules">
       <li>Misma vara para los cuatro partidos: los mismos estados, el mismo tipo de prueba y el mismo nivel de exigencia. Siempre en el mismo orden, alfabético por nombre del partido.</li>
@@ -265,7 +273,7 @@ footer a{color:var(--ink);font-weight:700}
 </main>
 <button class="totop" id="totop" aria-label="Volver arriba">↑</button>
 <footer><div class="wrap">
-  <div class="frow"><a href="#metodo">Método</a><a href="mailto:trechodemenos@gmail.com">trechodemenos@gmail.com</a><a href="https://www.instagram.com/trechodemenos/" target="_blank" rel="noopener">Instagram</a><a href="https://x.com/TrechoDeMenos" target="_blank" rel="noopener">X</a></div>
+  <div class="frow"><a href="#metodo">Método</a><a href="https://trechodemenos.es/promesas/">Índice de promesas</a><a href="mailto:trechodemenos@gmail.com">trechodemenos@gmail.com</a><a href="https://www.instagram.com/trechodemenos/" target="_blank" rel="noopener">Instagram</a><a href="https://x.com/TrechoDeMenos" target="_blank" rel="noopener">X</a></div>
   TrechoDeMenos es un proyecto independiente y sin afiliación a ningún partido. «Sin evidencia» significa que no se ha encontrado prueba, no que esté demostrado que no existe. Próximamente: las promesas de los programas de 2023 y su balance.
 </div></footer>
 <script>
@@ -291,7 +299,35 @@ const ST = [
 const KEY = Object.fromEntries(ST.map(s=>[s[0],s[1]]));
 const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmt = d => d? d.split("-").reverse().join("/") : "";
+
+/* Glosario: términos parlamentarios con explicación al pasar el ratón o tocarlos */
+const GL = [
+ ["Decreto-ley", /[Rr]eal(?:es)? [Dd]ecretos?-ley(?:es)?|[Dd]ecretos?-ley(?:es)?|[Dd]ecretos? ley\b/, "Norma con rango de ley que aprueba el Gobierno por urgencia. Entra en vigor al publicarse, pero el Congreso tiene 30 días hábiles para convalidarla o derogarla."],
+ ["Convalidar", /[Cc]onvalida(?:do|da|dos|das|ción|r)?\b/, "Votación en la que el Congreso acepta un decreto-ley del Gobierno. Si sale que sí, sigue en vigor."],
+ ["Derogar", /[Dd]eroga(?:do|da|dos|das|ción|r)\b/, "Dejar sin efecto una norma. Si el Congreso no convalida un decreto-ley, este queda derogado."],
+ ["Enmienda de devolución (a la totalidad)", /[Ee]nmiendas? (?:de devolución|a la totalidad)|[Ee]nmiendas (?:de PP|de PP y VOX|para devolver)|devolver(?:la|lo)? al Gobierno|[Pp]royecto devuelto/, "Petición para que el Congreso rechace un texto entero antes de debatirlo. Si se aprueba, vuelve al Gobierno y deja de tramitarse: en la práctica, queda tumbado."],
+ ["Toma en consideración", /[Tt]oma en consideración|[Aa]dmitida a trámite|[Aa]dmitirla a trámite|[Aa]dmisión a trámite/, "Primera votación de una proposición de ley: el Congreso decide si empieza a tramitarla. Admitirla no es aprobarla."],
+ ["Proposición no de ley", /[Pp]roposición no de ley/, "Texto que el Congreso aprueba para pedir algo al Gobierno. No le obliga: es una declaración política."],
+ ["Proposición de ley", /[Pp]roposición de ley/, "Propuesta de ley que presentan los grupos parlamentarios o el Senado, no el Gobierno."],
+ ["Proyecto de ley", /[Pp]royecto de ley|[Pp]royecto del Gobierno/, "Propuesta de ley que presenta el Gobierno."],
+ ["Diputación Permanente", /Diputación Permanente/, "Órgano reducido del Congreso que actúa cuando está disuelto o de vacaciones. Entre otras cosas, vota la convalidación de los decretos-ley."],
+ ["Pleno", /\bPleno\b/, "Reunión de los 350 diputados del Congreso. Es donde se votan las leyes."],
+ ["Iniciativa legislativa popular", /[Ii]niciativa (?:legislativa )?popular/, "Propuesta de ley presentada por la ciudadanía con al menos 500.000 firmas."],
+ ["Tres quintos", /tres quintos/, "Para reformar la Constitución hacen falta 210 de los 350 diputados (y tres quintos del Senado)."],
+ ["Mayoría absoluta", /mayoría absoluta/, "176 de los 350 diputados del Congreso."],
+ ["Deflactar", /[Dd]eflactar/, "Ajustar los tramos de un impuesto a la inflación para que, si los sueldos suben con el IPC, no se pague más en proporción."],
+ ["Diario de Sesiones", /Diario de Sesiones/, "Acta oficial de cada sesión del Congreso, con lo que se dijo y el resultado de las votaciones."],
+ ["Grupo Mixto", /Grupo Mixto/, "Grupo del Congreso que reúne a diputados de partidos sin grupo propio, como Podemos, BNG, Coalición Canaria o UPN."]
+];
+function glos(t){ // t ya escapado
+  const hits=[];
+  for(const [,re,def] of GL){ const m=re.exec(t); if(m && !hits.some(h=>m.index<h.e && m.index+m[0].length>h.s)) hits.push({s:m.index,e:m.index+m[0].length,def}); }
+  hits.sort((a,b)=>a.s-b.s); let out="",i=0;
+  for(const h of hits){ out+=t.slice(i,h.s)+`<span class="g" tabindex="0" role="note" data-g="${esc(h.def)}" aria-description="${esc(h.def)}">${t.slice(h.s,h.e)}</span>`; i=h.e; }
+  return out+t.slice(i);
+}
 const ROWS = DATA.filter(r=>r.leg==="XVI");
+try{document.getElementById("glosario").innerHTML=GL.map(([t,,d])=>`<dt>${esc(t)}</dt><dd>${esc(d)}</dd>`).join("");}catch(_){}
 /* Medidas de los programas como filas (separadas de la campaña) */
 const PROWS = (()=>{const out=[]; Object.keys(PROGRAMAS).forEach(p=>{const seen={}; PROGRAMAS[p].forEach(m=>{const tot=PROGRAMAS[p].filter(x=>x.n===m.n).length; const k=seen[m.n]=(seen[m.n]||0)+1; out.push({...m,p,kind:"prog",id:`PRG-${p}-${String(m.n).padStart(3,"0")}${tot>1?"abcdefgh"[k-1]:""}`});});}); return out;})();
 const progN = p => new Set((PROGRAMAS[p]||[]).map(m=>m.n)).size;
@@ -328,7 +364,7 @@ function promHTML(r,withWho){
     <div class="badges">${badges(r,o)}</div>
     <details class="more"><summary>Ver detalles y fuente</summary><div class="dbody">
       ${o.cita?`<p class="cita">«${esc(o.cita)}»</p>`:""}
-      ${o.resto?`<p>${esc(o.resto)}</p>`:""}
+      ${o.resto?`<p>${glos(esc(o.resto))}</p>`:""}
       ${r.fin?`<p><strong>${esc(r.fin)}.</strong> ${esc(r.freno||"")}</p>`:""}
       <div class="dlinks">${r.src?`<a href="${esc(r.src)}" target="_blank" rel="noopener">Fuente</a>`:""}${r.prueba?`<a href="${esc(r.prueba)}" target="_blank" rel="noopener">Prueba${r.tp?" · "+esc(r.tp):""}</a>`:""}${r.fv?`<span class="muted">Verificado el ${fmt(r.fv)}</span>`:""}<a class="pid" href="#${esc(r.id)}" title="Enlace directo a esta promesa">${esc(r.id)}</a></div>
     </div></details>
@@ -469,9 +505,9 @@ function renderVotos(t){
   const chips=a=>a.length?a.map(p=>`<span class="pchip">${esc(p)}</span>`).join(""):'<span class="vmeta">Sin desglose publicado</span>';
   document.getElementById("vlist").innerHTML = L.map(v=>`<article class="vcard">
     <div class="vhead"><span class="vdate">${esc(v.fecha)} · ${esc(v.organo)} · ${esc(v.t)}</span><span class="vres" style="--c:var(--${v.c})">${esc(v.res)}${v.si!=null&&v.no!=null?` · ${v.si} sí / ${v.no} no`:""}</span></div>
-    <h3>${esc(v.titulo)}</h3><p class="vmeta" style="margin:0 0 6px">Propuesto por: ${esc(v.prop)}</p><p style="margin:0;max-width:75ch">${esc(v.que)}</p>
+    <h3>${glos(esc(v.titulo))}</h3><p class="vmeta" style="margin:0 0 6px">Propuesto por: ${esc(v.prop)}</p><p style="margin:0;max-width:75ch">${glos(esc(v.que))}</p>
     <div class="vcols"><div class="vcol"><b>Votaron sí</b>${chips(v.psi)}</div><div class="vcol"><b>Votaron no</b>${chips(v.pno)}</div>${v.pab&&v.pab.length?`<div class="vcol"><b>Abstención</b>${chips(v.pab)}</div>`:""}</div>
-    ${v.nota?`<p class="vmeta">${esc(v.nota)}</p>`:""}
+    ${v.nota?`<p class="vmeta">${glos(esc(v.nota))}</p>`:""}
     <p class="vmeta">${v.rel.length?`Promesas relacionadas: ${v.rel.map(id=>`<a href="#${esc(id)}">${esc(id)}</a>`).join(", ")}. `:""}Fuentes: ${v.src.map(x=>`<a href="${x[1]}" target="_blank" rel="noopener">${esc(x[0])}</a>`).join(" · ")}</p>
   </article>`).join("");
 }
