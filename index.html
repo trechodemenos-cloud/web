@@ -265,7 +265,7 @@ footer a{color:var(--ink);font-weight:700}
 </main>
 <button class="totop" id="totop" aria-label="Volver arriba">↑</button>
 <footer><div class="wrap">
-  <div class="frow"><a href="#metodo">Método</a><a href="mailto:trechodemenos@gmail.com">trechodemenos@gmail.com</a><a href="https://www.instagram.com/trechodemenos/" rel="noopener">Instagram</a><a href="https://x.com/TrechoDeMenos" rel="noopener">X</a></div>
+  <div class="frow"><a href="#metodo">Método</a><a href="mailto:trechodemenos@gmail.com">trechodemenos@gmail.com</a><a href="https://www.instagram.com/trechodemenos/" target="_blank" rel="noopener">Instagram</a><a href="https://x.com/TrechoDeMenos" target="_blank" rel="noopener">X</a></div>
   TrechoDeMenos es un proyecto independiente y sin afiliación a ningún partido. «Sin evidencia» significa que no se ha encontrado prueba, no que esté demostrado que no existe. Próximamente: las promesas de los programas de 2023 y su balance.
 </div></footer>
 <script>
@@ -330,7 +330,7 @@ function promHTML(r,withWho){
       ${o.cita?`<p class="cita">«${esc(o.cita)}»</p>`:""}
       ${o.resto?`<p>${esc(o.resto)}</p>`:""}
       ${r.fin?`<p><strong>${esc(r.fin)}.</strong> ${esc(r.freno||"")}</p>`:""}
-      <div class="dlinks">${r.src?`<a href="${esc(r.src)}" rel="noopener">Fuente</a>`:""}${r.prueba?`<a href="${esc(r.prueba)}" rel="noopener">Prueba${r.tp?" · "+esc(r.tp):""}</a>`:""}${r.fv?`<span class="muted">Verificado el ${fmt(r.fv)}</span>`:""}<a class="pid" href="#${esc(r.id)}" title="Enlace directo a esta promesa">${esc(r.id)}</a></div>
+      <div class="dlinks">${r.src?`<a href="${esc(r.src)}" target="_blank" rel="noopener">Fuente</a>`:""}${r.prueba?`<a href="${esc(r.prueba)}" target="_blank" rel="noopener">Prueba${r.tp?" · "+esc(r.tp):""}</a>`:""}${r.fv?`<span class="muted">Verificado el ${fmt(r.fv)}</span>`:""}<a class="pid" href="#${esc(r.id)}" title="Enlace directo a esta promesa">${esc(r.id)}</a></div>
     </div></details>
   </article>`;
 }
@@ -342,7 +342,7 @@ function progHTML(m,withWho){
     <div class="pmeta"><span class="ptag">En su programa</span><span>Medida ${m.n} · pág. ${m.pag}</span><span>${esc(m.t)}</span></div>
     <div class="badges">${m.cifra?`<span class="badge">${esc(m.cifra)}</span>`:""}</div>
     ${m.rel?`<p class="vmeta" style="margin:8px 0 0">Campaña: ${relLinks(m.rel)}</p>`:""}
-    <div class="dlinks" style="margin-top:8px"><a href="${progLink(m)}" rel="noopener">Ver en el programa oficial</a><a class="pid" href="#${esc(m.id)}" title="Enlace directo a esta medida">${esc(m.id)}</a></div>
+    <div class="dlinks" style="margin-top:8px"><a href="${progLink(m)}" target="_blank" rel="noopener">Ver en el programa oficial</a><a class="pid" href="#${esc(m.id)}" title="Enlace directo a esta medida">${esc(m.id)}</a></div>
   </article>`;
 }
 
@@ -394,7 +394,7 @@ function renderCand(p,t){
 function progHead(p){
   const I=PROG_INFO[p];
   if(!I) return `<p class="progpend">${PROG_PEND}.</p><p class="vmeta">Lo añadiremos en cuanto lo revisemos sobre el documento oficial publicado por el partido, con el mismo criterio que al resto.</p>`;
-  return `<p class="vmeta" style="margin:0 0 10px">«${esc(I.titulo)}», presentado el ${I.presentado}: ${I.total} medidas en ${I.paginas} páginas. Aquí van solo las ${progN(p)} concretas y medibles. <a href="${I.url}" rel="noopener">${I.pdf?"Programa oficial (PDF)":"Presentación oficial"}</a>.${I.noFiguran.length?` Prometido en campaña pero no figura en el programa: ${I.noFiguran.map(x=>esc(x)).join("; ")}.`:""}</p>`;
+  return `<p class="vmeta" style="margin:0 0 10px">«${esc(I.titulo)}», presentado el ${I.presentado}: ${I.total} medidas en ${I.paginas} páginas. Aquí van solo las ${progN(p)} concretas y medibles. <a href="${I.url}" target="_blank" rel="noopener">${I.pdf?"Programa oficial (PDF)":"Presentación oficial"}</a>.${I.noFiguran.length?` Prometido en campaña pero no figura en el programa: ${I.noFiguran.map(x=>esc(x)).join("; ")}.`:""}</p>`;
 }
 function renderCList(p){
   const q=norm(cstate.q.trim());
@@ -437,8 +437,8 @@ function progBody(p){
   const I=PROG_INFO[p];
   if(!I) return `<p class="progpend">${PROG_PEND}.</p><p class="vmeta">Consultado el ${PROG_INFO.PP.consultado}. Lo añadiremos en cuanto lo revisemos sobre el documento oficial publicado por el partido, con el mismo criterio que al resto.</p>`;
   const L=PROGRAMAS[p], temas=[...new Set(L.map(m=>m.t))];
-  const item=m=>`<li><a class="pnum" href="${I.pdf?I.url+"#page="+m.pag:I.url}" rel="noopener" title="Ver en el programa oficial">Medida ${m.n} · pág. ${m.pag}</a> ${esc(m.txt)}${m.cifra?` <span class="pcifra">${esc(m.cifra)}</span>`:""}${m.rel?`<br><span class="vmeta">Campaña: ${esc(m.rel.replace(/(?<!C29-)\bPP-(\d)/g,"C29-PP-$1"))}</span>`:""}</li>`;
-  const head=`<p class="sub" style="margin:0 0 8px">«${esc(I.titulo)}», presentado el ${I.presentado}: ${I.total} medidas en ${I.paginas} páginas. Recogemos las <strong>${new Set(L.map(m=>m.n)).size}</strong> concretas y medibles de las ${I.conContenido}${I.vacias.length?" que tienen contenido":""}. <a href="${I.url}" rel="noopener">${I.pdf?"Programa oficial (PDF)":"Presentación oficial del programa"}</a> · consultado el ${I.consultado}.</p>${I.aviso?`<p class="vmeta">${esc(I.aviso)}</p>`:""}
+  const item=m=>`<li><a class="pnum" href="${I.pdf?I.url+"#page="+m.pag:I.url}" target="_blank" rel="noopener" title="Ver en el programa oficial">Medida ${m.n} · pág. ${m.pag}</a> ${esc(m.txt)}${m.cifra?` <span class="pcifra">${esc(m.cifra)}</span>`:""}${m.rel?`<br><span class="vmeta">Campaña: ${esc(m.rel.replace(/(?<!C29-)\bPP-(\d)/g,"C29-PP-$1"))}</span>`:""}</li>`;
+  const head=`<p class="sub" style="margin:0 0 8px">«${esc(I.titulo)}», presentado el ${I.presentado}: ${I.total} medidas en ${I.paginas} páginas. Recogemos las <strong>${new Set(L.map(m=>m.n)).size}</strong> concretas y medibles de las ${I.conContenido}${I.vacias.length?" que tienen contenido":""}. <a href="${I.url}" target="_blank" rel="noopener">${I.pdf?"Programa oficial (PDF)":"Presentación oficial del programa"}</a> · consultado el ${I.consultado}.</p>${I.aviso?`<p class="vmeta">${esc(I.aviso)}</p>`:""}
   ${I.vacias.length?`<p class="vmeta">${I.vacias.length} medidas (${I.vacias.join(", ")}) aparecen en el documento sin contenido, con el texto «Permanezca atento a la campaña para conocer esta nueva medida». Se añadirán cuando se conozcan.</p>`:""}
   ${I.noFiguran.length?`<div class="note"><strong>Prometido en campaña, pero no figura en el programa oficial:</strong><ul style="margin:6px 0 0">${I.noFiguran.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:""}`;
   return head+temas.map(t=>{const ms=L.filter(m=>m.t===t);return `<details class="pgroup"><summary>${esc(t)} <b>${ms.length}</b></summary><ul class="plist">${ms.map(item).join("")}</ul></details>`;}).join("");
@@ -472,7 +472,7 @@ function renderVotos(t){
     <h3>${esc(v.titulo)}</h3><p class="vmeta" style="margin:0 0 6px">Propuesto por: ${esc(v.prop)}</p><p style="margin:0;max-width:75ch">${esc(v.que)}</p>
     <div class="vcols"><div class="vcol"><b>Votaron sí</b>${chips(v.psi)}</div><div class="vcol"><b>Votaron no</b>${chips(v.pno)}</div>${v.pab&&v.pab.length?`<div class="vcol"><b>Abstención</b>${chips(v.pab)}</div>`:""}</div>
     ${v.nota?`<p class="vmeta">${esc(v.nota)}</p>`:""}
-    <p class="vmeta">${v.rel.length?`Promesas relacionadas: ${v.rel.map(id=>`<a href="#${esc(id)}">${esc(id)}</a>`).join(", ")}. `:""}Fuentes: ${v.src.map(x=>`<a href="${x[1]}" rel="noopener">${esc(x[0])}</a>`).join(" · ")}</p>
+    <p class="vmeta">${v.rel.length?`Promesas relacionadas: ${v.rel.map(id=>`<a href="#${esc(id)}">${esc(id)}</a>`).join(", ")}. `:""}Fuentes: ${v.src.map(x=>`<a href="${x[1]}" target="_blank" rel="noopener">${esc(x[0])}</a>`).join(" · ")}</p>
   </article>`).join("");
 }
 function renderMetodo(){
@@ -511,6 +511,8 @@ window.addEventListener("scroll",()=>tt.classList.toggle("on",window.scrollY>900
 tt.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
 renderInicio(); renderVotos(); renderProgramas(); renderMetodo(); route();
 window.addEventListener("hashchange",route);
+/* Enlaces externos (fuentes, PDFs, redes): siempre en pestaña nueva */
+document.addEventListener("click",e=>{const l=e.target.closest("a[href]"); if(l&&/^https?:/i.test(l.href)&&l.host!==location.host){l.target="_blank"; l.rel="noopener noreferrer";}},true);
 </script>
 </body>
 </html>
