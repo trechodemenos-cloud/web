@@ -136,7 +136,7 @@ def page(path, title, desc, body, crumbs, jsonld=None):
 {body}
 </main>
 <footer><div class="wrap">TrechoDeMenos es un proyecto independiente que recoge las promesas electorales del 29-N y comprobará si se cumplen. Mismo método para todos los partidos. Actualizado el {e(UPD)}.<br>
-<a href="/">Web interactiva</a> · <a href="/promesas/">Índice de promesas</a> · <a href="/#quienes">Quiénes somos</a> · <a href="/#metodo">Método</a> · <a href="/#erratas">Fe de erratas</a> · <a href="mailto:trechodemenos@gmail.com">trechodemenos@gmail.com</a> · <a href="https://instagram.com/trechodemenos" target="_blank" rel="noopener">Instagram</a> · <a href="https://x.com/TrechoDeMenos" target="_blank" rel="noopener">X</a></div></footer>
+<a href="/">Web interactiva</a> · <a href="/promesas/">Índice de promesas</a> · <a href="/#quienes">Quiénes somos</a> · <a href="/#metodo">Método</a> · <a href="/#erratas">Fe de erratas</a> · <a href="mailto:info@trechodemenos.es">info@trechodemenos.es</a> · <a href="https://instagram.com/trechodemenos" target="_blank" rel="noopener">Instagram</a> · <a href="https://x.com/TrechoDeMenos" target="_blank" rel="noopener">X</a></div></footer>
 </body>
 </html>
 """
