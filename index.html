@@ -12,9 +12,7 @@
 <meta property="og:type" content="website">
 <link rel="alternate" type="application/rss+xml" title="TrechoDeMenos · Novedades" href="https://trechodemenos.es/feed.xml">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%22200%20250%20680%20580%22%3E%3Crect%20x%3D%22200%22%20y%3D%22250%22%20width%3D%22170%22%20height%3D%22580%22%20fill%3D%22%2314181f%22/%3E%3Crect%20x%3D%22710%22%20y%3D%22250%22%20width%3D%22170%22%20height%3D%22580%22%20fill%3D%22%2314181f%22/%3E%3Crect%20x%3D%22370%22%20y%3D%22460%22%20width%3D%22230%22%20height%3D%22160%22%20fill%3D%22%23FFD60A%22/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700;900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="fonts.css">
 <style>
 /* Expediente público: papel frío y tinta. Los partidos no llevan color: el color solo marca el estado de una promesa. */
 :root{
@@ -306,6 +304,16 @@ footer a{color:var(--ink);font-weight:700}
       <li><b>14/11/2026 · Votaciones.</b> Primer decreto «ómnibus» (22/01/2025): la nota atribuía la abstención a Coalición Canaria. Fue de UPN.</li>
     </ul>
 
+    <h3 id="privacidad">Privacidad</h3>
+    <p class="sub">Última actualización: 15/11/2026.</p>
+    <ul class="erratas">
+      <li><b>Sin cookies ni seguimiento.</b> Esta web no usa cookies, ni herramientas de analítica o de publicidad, ni pide registrarse. No guardamos ningún dato de quien la visita.</li>
+      <li><b>Sin conexiones a terceros.</b> Todo lo que necesita la página (textos, datos y tipografías) se sirve desde la propia web. Los botones de Instagram, X, WhatsApp o compartir son simples enlaces: solo al pulsarlos sales a esa red, y allí se aplica su propia política.</li>
+      <li><b>Alojamiento.</b> La web está alojada en GitHub Pages (GitHub Inc.), que, como cualquier servidor, registra datos técnicos de las visitas, como la dirección IP, por motivos de seguridad. Puedes consultar <a href="https://docs.github.com/es/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">su declaración de privacidad</a>.</li>
+      <li><b>Si nos escribes.</b> Al escribir a <a href="mailto:info@trechodemenos.es">info@trechodemenos.es</a>, usamos tu nombre y tu dirección solo para responderte y, si nos avisas de un error, para corregirlo. No los cedemos a nadie ni los usamos para enviarte nada que no hayas pedido. Los borramos cuando ya no hacen falta, o antes si nos lo pides. El correo lo gestiona IONOS, un proveedor europeo.</li>
+      <li><b>Tus derechos.</b> Puedes pedir en cualquier momento ver, corregir o borrar tus datos escribiendo a info@trechodemenos.es. Si crees que no lo hemos hecho bien, puedes reclamar ante la <a href="https://www.aepd.es" target="_blank" rel="noopener">Agencia Española de Protección de Datos</a>.</li>
+    </ul>
+
     <h3 id="m-balance">Balance 2023-2026</h3>
     <p>Para el balance se recogen las promesas de los programas de 2023 tema a tema, con el texto tal como aparece en el programa. Cada una se comprueba con documentos oficiales (BOE, Diario de Sesiones, Boletín de las Cortes, datos del INE o de la Seguridad Social) y, cuando no los hay, con prensa que cite la fuente. Si no se encuentra prueba ni a favor ni en contra, queda como «Sin evidencia», que no es lo mismo que «Incumplida». Se tiene en cuenta el papel de cada partido: quien está en la oposición no puede aprobar leyes por sí solo.</p>
 
@@ -335,7 +343,7 @@ footer a{color:var(--ink);font-weight:700}
 </main>
 <button class="totop" id="totop" aria-label="Volver arriba">↑</button>
 <footer><div class="wrap">
-  <div class="frow"><a href="#quienes">Quiénes somos</a><a href="#metodo">Método</a><a href="#erratas">Fe de erratas</a><a href="#novedades">Novedades</a><a href="https://trechodemenos.es/feed.xml">RSS</a><a href="https://trechodemenos.es/promesas/">Índice de promesas</a><a href="mailto:info@trechodemenos.es">info@trechodemenos.es</a><a href="https://www.instagram.com/trechodemenos/" target="_blank" rel="noopener">Instagram</a><a href="https://x.com/TrechoDeMenos" target="_blank" rel="noopener">X</a></div>
+  <div class="frow"><a href="#quienes">Quiénes somos</a><a href="#metodo">Método</a><a href="#erratas">Fe de erratas</a><a href="#privacidad">Privacidad</a><a href="#novedades">Novedades</a><a href="https://trechodemenos.es/feed.xml">RSS</a><a href="https://trechodemenos.es/promesas/">Índice de promesas</a><a href="mailto:info@trechodemenos.es">info@trechodemenos.es</a><a href="https://www.instagram.com/trechodemenos/" target="_blank" rel="noopener">Instagram</a><a href="https://x.com/TrechoDeMenos" target="_blank" rel="noopener">X</a></div>
   TrechoDeMenos es un proyecto independiente y sin afiliación a ningún partido. «Sin evidencia» significa que no se ha encontrado prueba, no que esté demostrado que no existe. Ya puedes ver el <a href="#balance">balance de las promesas de 2023</a>.
 </div></footer>
 <script>
@@ -707,7 +715,7 @@ function route(){
   if(a==="novedades"){ renderNovedades(); show("v-novedades",""); window.scrollTo(0,0); return; }
   if(/^(pp|psoe|sumar|vox)-(viv|emp|imp)-\d+$/.test(h)){ bstate={p:"todos",t:"todos",s:"todos",open:raw.toUpperCase()}; show("v-balance","balance"); renderBalance(); return; }
   if(a==="votaciones"){ renderVotos(b||"todos"); show("v-votaciones","votaciones"); window.scrollTo(0,0); return; }
-  if(a==="quienes"||a==="erratas"){ show("v-metodo","metodo"); const el=document.getElementById(a); if(el) setTimeout(()=>el.scrollIntoView({block:"start"}),30); return; }
+  if(a==="quienes"||a==="erratas"||a==="privacidad"){ show("v-metodo","metodo"); const el=document.getElementById(a); if(el) setTimeout(()=>el.scrollIntoView({block:"start"}),30); return; }
   if(["programas","metodo"].includes(a)){ show("v-"+a,a); window.scrollTo(0,0); return; }
   if(a==="c-programa"||a==="c-votos"){ const el=document.getElementById(a); if(el) el.scrollIntoView({block:"start"}); return; }
   if(a==="resumen") { history.replaceState(null,"","#inicio"); }

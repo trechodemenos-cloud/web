@@ -125,8 +125,7 @@ def page(path, title, desc, body, crumbs, jsonld=None):
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@TrechoDeMenos">
 <link rel="icon" href="{FAVICON}">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;700;900&family=Newsreader:ital@1&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/fonts-static.css">
 <style>{CSS}</style>{ld}
 </head>
 <body>
@@ -136,7 +135,7 @@ def page(path, title, desc, body, crumbs, jsonld=None):
 {body}
 </main>
 <footer><div class="wrap">TrechoDeMenos es un proyecto independiente que recoge las promesas electorales del 29-N y comprobará si se cumplen. Mismo método para todos los partidos. Actualizado el {e(UPD)}.<br>
-<a href="/">Web interactiva</a> · <a href="/promesas/">Índice de promesas</a> · <a href="/balance-2023/">Balance 2023</a> · <a href="/#quienes">Quiénes somos</a> · <a href="/#metodo">Método</a> · <a href="/#erratas">Fe de erratas</a> · <a href="mailto:info@trechodemenos.es">info@trechodemenos.es</a> · <a href="https://instagram.com/trechodemenos" target="_blank" rel="noopener">Instagram</a> · <a href="https://x.com/TrechoDeMenos" target="_blank" rel="noopener">X</a></div></footer>
+<a href="/">Web interactiva</a> · <a href="/promesas/">Índice de promesas</a> · <a href="/balance-2023/">Balance 2023</a> · <a href="/#quienes">Quiénes somos</a> · <a href="/#metodo">Método</a> · <a href="/#erratas">Fe de erratas</a> · <a href="/#privacidad">Privacidad</a> · <a href="mailto:info@trechodemenos.es">info@trechodemenos.es</a> · <a href="https://instagram.com/trechodemenos" target="_blank" rel="noopener">Instagram</a> · <a href="https://x.com/TrechoDeMenos" target="_blank" rel="noopener">X</a></div></footer>
 </body>
 </html>
 """
