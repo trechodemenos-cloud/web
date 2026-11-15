@@ -141,6 +141,7 @@ details.more[open] summary::before{content:"– "}
 .dbody p{margin:0 0 8px}
 .cita{font-family:var(--f-quote);font-size:17px;font-style:italic;border-left:3px solid var(--hl);padding-left:10px}
 .dlinks{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px}
+ul.erratas{padding-left:18px;max-width:75ch}ul.erratas li{margin:0 0 8px}
 .shr{font:inherit;font-size:14px;font-weight:600;background:none;border:0;padding:0;color:var(--ink);text-decoration:underline;cursor:pointer}
 .shr:focus-visible{outline:2px solid var(--hl);outline-offset:2px}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:8px;font-size:15px;z-index:99;opacity:0;transition:opacity .2s;pointer-events:none}.toast.on{opacity:1}
@@ -257,6 +258,19 @@ footer a{color:var(--ink);font-weight:700}
     <h2 id="h-met">Método</h2>
     <p class="sub">Las reglas son públicas para que cualquiera pueda comprobar cada veredicto y discutirlo con el documento delante.</p>
     <div class="note"><strong>¿Has visto un error, falta una promesa o tienes una sugerencia?</strong> Escríbenos a <a href="mailto:trechodemenos@gmail.com">trechodemenos@gmail.com</a>. Si nos equivocamos, lo corregimos en público y con fecha.</div>
+    <h3 id="quienes">Quiénes somos</h3>
+    <p>TrechoDeMenos es un proyecto ciudadano e independiente: no está vinculado a ningún partido ni recibe dinero de ninguno. Nació para la campaña del 29-N con una idea sencilla: apuntar lo que promete cada partido, con fecha, lugar y fuente, y comprobar durante la legislatura si se cumple.</p>
+    <p><strong>Cómo se hace.</strong> Leemos los programas oficiales completos y seguimos cada día la campaña en fuentes primarias (webs y canales de los partidos) y agencias. Usamos herramientas de inteligencia artificial para leer documentos largos, ordenar los datos y preparar las imágenes, y cada dato se comprueba contra su fuente original antes de publicarlo. Cada ficha enlaza a esa fuente para que cualquiera pueda comprobarla.</p>
+    <p><strong>Mismo trato para todos.</strong> Los cuatro partidos aparecen siempre en el mismo orden (alfabético por nombre), con el mismo formato y el mismo criterio. Si un partido no ha publicado su programa, se indica, y se revisará igual en cuanto lo haga.</p>
+
+    <h3 id="erratas">Fe de erratas</h3>
+    <p class="sub">Cuando corregimos algo ya publicado, lo anotamos aquí con su fecha.</p>
+    <ul class="erratas">
+      <li><b>14/11/2026 · Votaciones.</b> Ley para prohibir a empresas y fondos comprar viviendas (15/09/2026): habíamos publicado el resultado que dio la prensa (44 sí, 179 no y 124 abstenciones). El resultado oficial del Congreso es 44 sí, 175 no y 127 abstenciones.</li>
+      <li><b>14/11/2026 · Votaciones.</b> Decretos de vivienda del 2/10/2026: aparecían como una sola votación. Fueron dos: el Real Decreto-ley 26/2026 (172 sí, 178 no) y el 27/2026 (166 sí, 184 no), con votos distintos del PNV y Coalición Canaria.</li>
+      <li><b>14/11/2026 · Votaciones.</b> Primer decreto «ómnibus» (22/01/2025): la nota atribuía la abstención a Coalición Canaria. Fue de UPN.</li>
+    </ul>
+
     <h3>Estados de una promesa</h3>
     <p class="sub">El color solo indica el estado de la promesa, y siempre va con su nombre escrito. Los partidos no llevan color.</p>
     <div class="stdef" id="stdef"></div>
@@ -283,7 +297,7 @@ footer a{color:var(--ink);font-weight:700}
 </main>
 <button class="totop" id="totop" aria-label="Volver arriba">↑</button>
 <footer><div class="wrap">
-  <div class="frow"><a href="#metodo">Método</a><a href="https://trechodemenos.es/promesas/">Índice de promesas</a><a href="mailto:trechodemenos@gmail.com">trechodemenos@gmail.com</a><a href="https://www.instagram.com/trechodemenos/" target="_blank" rel="noopener">Instagram</a><a href="https://x.com/TrechoDeMenos" target="_blank" rel="noopener">X</a></div>
+  <div class="frow"><a href="#quienes">Quiénes somos</a><a href="#metodo">Método</a><a href="#erratas">Fe de erratas</a><a href="https://trechodemenos.es/promesas/">Índice de promesas</a><a href="mailto:trechodemenos@gmail.com">trechodemenos@gmail.com</a><a href="https://www.instagram.com/trechodemenos/" target="_blank" rel="noopener">Instagram</a><a href="https://x.com/TrechoDeMenos" target="_blank" rel="noopener">X</a></div>
   TrechoDeMenos es un proyecto independiente y sin afiliación a ningún partido. «Sin evidencia» significa que no se ha encontrado prueba, no que esté demostrado que no existe. Próximamente: las promesas de los programas de 2023 y su balance.
 </div></footer>
 <script>
@@ -580,6 +594,7 @@ function route(){
   if(a!=="buscar") document.getElementById("gq").value="";
   if(a==="buscar"){ const q=raw.slice(7); document.getElementById("gq").value=q; renderBuscar(q); show("v-buscar",""); return; }
   if(a==="votaciones"){ renderVotos(b||"todos"); show("v-votaciones","votaciones"); window.scrollTo(0,0); return; }
+  if(a==="quienes"||a==="erratas"){ show("v-metodo","metodo"); const el=document.getElementById(a); if(el) setTimeout(()=>el.scrollIntoView({block:"start"}),30); return; }
   if(["programas","metodo"].includes(a)){ show("v-"+a,a); window.scrollTo(0,0); return; }
   if(a==="c-programa"||a==="c-votos"){ const el=document.getElementById(a); if(el) el.scrollIntoView({block:"start"}); return; }
   if(a==="resumen") { history.replaceState(null,"","#inicio"); }
