@@ -141,6 +141,9 @@ details.more[open] summary::before{content:"– "}
 .dbody p{margin:0 0 8px}
 .cita{font-family:var(--f-quote);font-size:17px;font-style:italic;border-left:3px solid var(--hl);padding-left:10px}
 .dlinks{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px}
+.shr{font:inherit;font-size:14px;font-weight:600;background:none;border:0;padding:0;color:var(--ink);text-decoration:underline;cursor:pointer}
+.shr:focus-visible{outline:2px solid var(--hl);outline-offset:2px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:8px;font-size:15px;z-index:99;opacity:0;transition:opacity .2s;pointer-events:none}.toast.on{opacity:1}
 .pid{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);text-decoration:none}
 .pid:hover{text-decoration:underline}
 
@@ -194,7 +197,7 @@ footer a{color:var(--ink);font-weight:700}
 </header>
 <div class="bar"><div class="wrap barin">
   <nav class="tabs" aria-label="Secciones">
-    <a href="#inicio">Inicio</a><a href="#sumar">Frente Amplio</a><a href="#pp">PP</a><a href="#psoe">PSOE</a><a href="#vox">VOX</a><a href="#temas">Por tema</a><a href="#programas">Programas</a><a href="#votaciones">Votaciones</a><a href="#metodo" class="last">Método</a>
+    <a href="#inicio">Inicio</a><a href="#sumar">Frente Amplio</a><a href="#pp">PP</a><a href="#psoe">PSOE</a><a href="#vox">VOX</a><a href="#temas">Por tema</a><a href="#parati">Para ti</a><a href="#programas">Programas</a><a href="#votaciones">Votaciones</a><a href="#metodo" class="last">Método</a>
   </nav>
   <div class="sbox"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="gq" type="search" placeholder="Buscar: pensiones, alquiler, IVA…" aria-label="Buscar en todas las promesas"></div>
 </div></div>
@@ -221,6 +224,13 @@ footer a{color:var(--ink);font-weight:700}
     <p class="sub">Elige un tema y compara lo que ha prometido cada partido, en el orden de siempre (alfabético por nombre del partido).</p>
     <div class="chips" id="tchips" role="group" aria-label="Temas"></div>
     <div class="cols4" id="tcols"></div>
+  </section>
+
+  <section class="view" id="v-parati" aria-labelledby="h-pt">
+    <h2 id="h-pt">Para ti</h2>
+    <p class="sub">Elige tu situación y mira qué propone cada partido que te afecte directamente, con su fuente. Mismo criterio para los cuatro: la selección se hace por las palabras de cada medida y la revisamos a mano. Si echas algo en falta, escríbenos.</p>
+    <div class="chips" id="pchips" role="group" aria-label="Perfiles"></div>
+    <div class="cols4" id="pcols"></div>
   </section>
 
   <section class="view" id="v-buscar" aria-live="polite">
@@ -366,7 +376,7 @@ function promHTML(r,withWho){
       ${o.cita?`<p class="cita">«${esc(o.cita)}»</p>`:""}
       ${o.resto?`<p>${glos(esc(o.resto))}</p>`:""}
       ${r.fin?`<p><strong>${esc(r.fin)}.</strong> ${esc(r.freno||"")}</p>`:""}
-      <div class="dlinks">${r.src?`<a href="${esc(r.src)}" target="_blank" rel="noopener">Fuente</a>`:""}${r.prueba?`<a href="${esc(r.prueba)}" target="_blank" rel="noopener">Prueba${r.tp?" · "+esc(r.tp):""}</a>`:""}${r.fv?`<span class="muted">Verificado el ${fmt(r.fv)}</span>`:""}<a class="pid" href="#${esc(r.id)}" title="Enlace directo a esta promesa">${esc(r.id)}</a></div>
+      <div class="dlinks">${r.src?`<a href="${esc(r.src)}" target="_blank" rel="noopener">Fuente</a>`:""}${r.prueba?`<a href="${esc(r.prueba)}" target="_blank" rel="noopener">Prueba${r.tp?" · "+esc(r.tp):""}</a>`:""}${r.fv?`<span class="muted">Verificado el ${fmt(r.fv)}</span>`:""}${shareHTML("promesa",r.id,CAND[r.p].a+": "+r.txt)}<a class="pid" href="#${esc(r.id)}" title="Enlace directo a esta promesa">${esc(r.id)}</a></div>
     </div></details>
   </article>`;
 }
@@ -378,7 +388,7 @@ function progHTML(m,withWho){
     <div class="pmeta"><span class="ptag">En su programa</span><span>Medida ${m.n} · pág. ${m.pag}</span><span>${esc(m.t)}</span></div>
     <div class="badges">${m.cifra?`<span class="badge">${esc(m.cifra)}</span>`:""}</div>
     ${m.rel?`<p class="vmeta" style="margin:8px 0 0">Campaña: ${relLinks(m.rel)}</p>`:""}
-    <div class="dlinks" style="margin-top:8px"><a href="${progLink(m)}" target="_blank" rel="noopener">Ver en el programa oficial</a><a class="pid" href="#${esc(m.id)}" title="Enlace directo a esta medida">${esc(m.id)}</a></div>
+    <div class="dlinks" style="margin-top:8px"><a href="${progLink(m)}" target="_blank" rel="noopener">Ver en el programa oficial</a>${shareHTML("medida",m.id,CAND[m.p].a+", medida "+m.n+": "+m.txt)}<a class="pid" href="#${esc(m.id)}" title="Enlace directo a esta medida">${esc(m.id)}</a></div>
   </article>`;
 }
 
@@ -458,6 +468,39 @@ function renderTemas(ts){
       ${ms.map(m=>`<div class="mini prog">${esc(m.txt)}<div class="pmeta"><span class="ptag">Programa</span> Medida ${m.n} · <a href="#${esc(m.id)}">detalles</a></div></div>`).join("")}</div>`;}).join("");
 }
 
+
+/* Compartir: abre el menú del móvil o copia el enlace a la página propia de la promesa */
+function shareHTML(tipo,id,txt){
+  const u=`https://trechodemenos.es/${tipo}/${id}/`;
+  return `<button type="button" class="shr" data-u="${esc(u)}" data-t="${esc(txt)}">Compartir</button><a href="https://wa.me/?text=${encodeURIComponent(txt+" "+u)}" target="_blank" rel="noopener">WhatsApp</a>`;
+}
+function toast(m){let t=document.querySelector(".toast"); if(!t){t=document.createElement("div");t.className="toast";t.setAttribute("role","status");document.body.appendChild(t);} t.textContent=m; t.classList.add("on"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("on"),2200);}
+document.addEventListener("click",async e=>{const b=e.target.closest(".shr"); if(!b) return; const u=b.dataset.u, t=b.dataset.t;
+  try{ if(navigator.share){ await navigator.share({title:"TrechoDeMenos",text:t,url:u}); return; } }catch(_){ return; }
+  try{ await navigator.clipboard.writeText(u); toast("Enlace copiado"); }catch(_){ prompt("Copia el enlace:",u); }});
+
+/* Para ti: perfiles */
+const PERFILES=[
+ {k:"jovenes",n:"Jóvenes",re:/jóven|joven|18 a 35|menores de (?:25|35|40)|universi|becari|erasmus|matrícula|primer empleo|emancip|estudiant|formación profesional|\bfp\b|redes sociales/i,no:/^$/},
+ {k:"familias",n:"Familias con hijos",re:/hijo|famili|crianza|niñ|recién nacido|\bmenores\b|escuela infantil|0 a 3|guarder|permiso|comedor|natalidad/i,no:/migrantes|menores de 40|Agricultura Familiar|menores de 25|no acompañados|Silencio administrativo|responsabilidad penal/i},
+ {k:"vivienda",n:"Buscas vivienda",re:/alquiler|inquilin|arrend|primera vivienda|comprar.{0,20}vivienda|acceso a la vivienda|vivienda asequible|vivienda pública|vivienda protegida/i,no:/deudores|ganancias por vender/i},
+ {k:"trabajadores",n:"Trabajadores",re:/salario|jornada|despido|horas extra|\bsmi\b|convenio|inspección de trabajo|tiempo parcial|riesgos laborales|registro horario|\bparo\b|desempleo/i,no:/Nuevos autónomos|subvenciones, ayudas y convenios/i},
+ {k:"autonomos",n:"Autónomos y pymes",re:/autónom|pyme|emprend|\breta\b/i,no:/zonas tensionadas|comunidades autónomas|Unidad de Mercado|comunidad autónoma/i},
+ {k:"mayores",n:"Mayores y pensionistas",re:/pensi|jubila|personas mayores|80 años|soledad|\bela\b|dependencia|longevidad/i,no:/Ceuta|orfandad|deudores|Guardia Civil/i}
+];
+const enPerfil=(P,t)=>P.re.test(t)&&!P.no.test(t);
+function renderParati(k){
+  const cur=PERFILES.find(x=>x.k===k)||PERFILES[0];
+  const n=P=>ROWS.filter(r=>enPerfil(P,r.txt)).length+PROWS.filter(m=>enPerfil(P,m.txt)).length;
+  document.getElementById("pchips").innerHTML=PERFILES.map(P=>`<a class="chip" href="#parati/${P.k}" ${P===cur?'aria-current="page"':""}>${esc(P.n)} <b>${n(P)}</b></a>`).join("");
+  document.getElementById("pcols").innerHTML=PARTIES.map(p=>{
+    const rs=ROWS.filter(r=>r.p===p&&enPerfil(cur,r.txt)).sort(byDate), ms=PROWS.filter(m=>m.p===p&&enPerfil(cur,m.txt));
+    return `<div><div class="colh">${iniHTML(p)}<div><div class="cname">${esc(CAND[p].n)}</div><div class="cparty">${rs.length} en campaña · ${PROG_INFO[p]?ms.length+" en el programa":"programa pendiente"}</div></div></div>
+      ${rs.map(r=>`<div class="mini">${esc(r.txt)}<div class="pmeta">${fmt(r.fecha)} · ${esc(r.acto)} · <a href="#${esc(r.id)}">detalles</a></div></div>`).join("")}
+      ${ms.map(m=>`<div class="mini prog">${esc(m.txt)}<div class="pmeta"><span class="ptag">Programa</span> Medida ${m.n} · <a href="#${esc(m.id)}">detalles</a></div></div>`).join("")}
+      ${rs.length||ms.length?"":`<p class="none">Nada específico para este perfil por ahora${PROG_INFO[p]?"":" (programa pendiente)"}.</p>`}</div>`;}).join("");
+}
+
 /* Búsqueda global */
 function renderBuscar(q){
   const s=norm(q.trim());
@@ -533,6 +576,7 @@ function route(){
   const p=PARTIES.find(x=>x.toLowerCase()===a);
   if(p){ renderCand(p,b||"todos"); show("v-cand",a); window.scrollTo(0,0); return; }
   if(a==="tema"||a==="temas"){ renderTemas(b); show("v-temas","temas"); return; }
+  if(a==="parati"){ renderParati(b); show("v-parati","parati"); window.scrollTo(0,0); return; }
   if(a!=="buscar") document.getElementById("gq").value="";
   if(a==="buscar"){ const q=raw.slice(7); document.getElementById("gq").value=q; renderBuscar(q); show("v-buscar",""); return; }
   if(a==="votaciones"){ renderVotos(b||"todos"); show("v-votaciones","votaciones"); window.scrollTo(0,0); return; }
