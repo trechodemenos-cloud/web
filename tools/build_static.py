@@ -136,7 +136,7 @@ def page(path, title, desc, body, crumbs, jsonld=None):
 {body}
 </main>
 <footer><div class="wrap">TrechoDeMenos es un proyecto independiente que recoge las promesas electorales del 29-N y comprobará si se cumplen. Mismo método para todos los partidos. Actualizado el {e(UPD)}.<br>
-<a href="/">Web interactiva</a> · <a href="/promesas/">Índice de promesas</a> · <a href="/#quienes">Quiénes somos</a> · <a href="/#metodo">Método</a> · <a href="/#erratas">Fe de erratas</a> · <a href="mailto:info@trechodemenos.es">info@trechodemenos.es</a> · <a href="https://instagram.com/trechodemenos" target="_blank" rel="noopener">Instagram</a> · <a href="https://x.com/TrechoDeMenos" target="_blank" rel="noopener">X</a></div></footer>
+<a href="/">Web interactiva</a> · <a href="/promesas/">Índice de promesas</a> · <a href="/balance-2023/">Balance 2023</a> · <a href="/#quienes">Quiénes somos</a> · <a href="/#metodo">Método</a> · <a href="/#erratas">Fe de erratas</a> · <a href="mailto:info@trechodemenos.es">info@trechodemenos.es</a> · <a href="https://instagram.com/trechodemenos" target="_blank" rel="noopener">Instagram</a> · <a href="https://x.com/TrechoDeMenos" target="_blank" rel="noopener">X</a></div></footer>
 </body>
 </html>
 """
@@ -154,7 +154,7 @@ def li_med(mm):
     return f'<li><a href="/medida/{e(mm["id"])}/">{e(mm["txt"])}</a><small>Programa · medida {mm["n"]}, pág. {mm["pag"]}{" · " + e(mm["cifra"]) if mm.get("cifra") else ""}</small></li>'
 
 # Limpieza de lo generado antes (por si se borra o renombra algo)
-for d in ("promesa", "medida", "partido", "tema", "promesas"):
+for d in ("promesa", "medida", "partido", "tema", "promesas", "balance-2023"):
     shutil.rmtree(os.path.join(ROOT, d), ignore_errors=True)
 
 # 1) Compromisos de campaña
@@ -240,6 +240,41 @@ for p in PARTIES:
     pp = P[p]
     body += f'<h2><a href="/partido/{pp["slug"]}/">{e(pp["n"])}</a></h2><ul class="list">' + "".join(li_prom(r) for r in sorted([r for r in DATA if r["p"] == p], key=lambda x: x["fecha"], reverse=True)) + "</ul>"
 URLS.append(page("promesas/", "Índice de promesas del 29-N", "Todas las promesas del Frente Amplio, el PP, el PSOE y VOX para las elecciones generales del 29 de noviembre de 2026, con fecha, lugar y fuente.", body, [("Inicio", "/"), ("Índice", None)]))
+
+# 5b) Balance 2023-2026 (página índice) y feed RSS
+B23P = os.path.join(ROOT, "balance2023.json")
+if os.path.exists(B23P):
+    B23 = json.load(open(B23P, encoding="utf-8"))
+    N23 = {"PP": "PP", "PSOE": "PSOE", "SUMAR": "Sumar (hoy en el Frente Amplio)", "VOX": "VOX"}
+    body = "<h1>Balance de las promesas de 2023</h1><p class=\"muted\">Qué prometieron en 2023 el PP, el PSOE, Sumar y VOX sobre vivienda, empleo y pensiones, e impuestos, y qué se hizo en la legislatura 2023-2026. El PSOE y Sumar gobernaron; el PP y VOX estaban en la oposición. Cada promesa, con su comprobación y su prueba, en la web interactiva.</p><p><a class=\"btn\" href=\"/#balance\">Ver el balance con filtros</a></p>"
+    for p23 in ["SUMAR", "PP", "PSOE", "VOX"]:
+        xs = [b for b in B23 if b["p"] == p23]
+        if not xs: continue
+        from collections import Counter
+        c = Counter(b["st"] for b in xs)
+        body += f"<h2>{e(N23[p23])} · {e(xs[0]['papel'])}</h2><p class=\"muted\">" + " · ".join(f"{e(k)}: {v}" for k, v in c.most_common()) + "</p><ul class=\"list\">"
+        body += "".join(f'<li><a href="/#{e(b["id"])}">{e(b["txt"][:220])}{"…" if len(b["txt"])>220 else ""}</a><small>{e(b["t"])} · {e(b["st"])} · {e(b["id"])}</small></li>' for b in xs) + "</ul>"
+    URLS.append(page("balance-2023/", "Balance de las promesas de 2023", "Qué prometieron el PP, el PSOE, Sumar y VOX en 2023 y qué se hizo en la legislatura 2023-2026, con la prueba de cada promesa.", body, [("Inicio", "/"), ("Balance 2023", None)]))
+
+from email.utils import format_datetime
+from datetime import datetime, timezone
+def rfc(d):
+    y, m_, dd = map(int, d.split("-")); return format_datetime(datetime(y, m_, dd, 12, 0, tzinfo=timezone.utc))
+items = []
+mN = re.search(r"const NOVEDADES=\[(.*?)\n\];", SRC, re.S)
+if mN:
+    for f, t in re.findall(r'\["(\d{4}-\d\d-\d\d)","(.*?)"\]', mN.group(1)):
+        items.append((f, t, f"{BASE}/#novedades", t))
+for r in DATA:
+    pp = P[r["p"]]
+    items.append((r["fecha"], f"{pp['corto']}: {r['txt']}", f"{BASE}/promesa/{r['id']}/", f"Lo dijo {r.get('quien') or pp['n']} ({r.get('acto')}, {r.get('lugar')}). Estado: {r['st']}."))
+items.sort(key=lambda x: x[0], reverse=True)
+rss = ['<?xml version="1.0" encoding="UTF-8"?>', '<rss version="2.0"><channel>', "<title>TrechoDeMenos · Novedades</title>", f"<link>{BASE}/</link>",
+       "<description>Las promesas de los partidos para el 29-N, con fecha, lugar y fuente, y su cumplimiento.</description>", "<language>es-es</language>"]
+for i, (f, t, l, d) in enumerate(items[:80]):
+    rss.append(f"<item><title>{e(t)}</title><link>{e(l)}</link><guid isPermaLink=\"false\">{e(l)}#{i}-{f}</guid><pubDate>{rfc(f)}</pubDate><description>{e(d)}</description></item>")
+rss.append("</channel></rss>")
+open(os.path.join(ROOT, "feed.xml"), "w", encoding="utf-8").write("\n".join(rss) + "\n")
 
 # 6) sitemap y robots
 hoy = date.today().isoformat()

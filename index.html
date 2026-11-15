@@ -10,6 +10,7 @@
 <meta property="og:url" content="https://trechodemenos.es/">
 <meta property="og:image" content="https://trechodemenos.es/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
 <meta property="og:type" content="website">
+<link rel="alternate" type="application/rss+xml" title="TrechoDeMenos · Novedades" href="https://trechodemenos.es/feed.xml">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%22200%20250%20680%20580%22%3E%3Crect%20x%3D%22200%22%20y%3D%22250%22%20width%3D%22170%22%20height%3D%22580%22%20fill%3D%22%2314181f%22/%3E%3Crect%20x%3D%22710%22%20y%3D%22250%22%20width%3D%22170%22%20height%3D%22580%22%20fill%3D%22%2314181f%22/%3E%3Crect%20x%3D%22370%22%20y%3D%22460%22%20width%3D%22230%22%20height%3D%22160%22%20fill%3D%22%23FFD60A%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -141,6 +142,13 @@ details.more[open] summary::before{content:"– "}
 .dbody p{margin:0 0 8px}
 .cita{font-family:var(--f-quote);font-size:17px;font-style:italic;border-left:3px solid var(--hl);padding-left:10px}
 .dlinks{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px}
+.bsum{overflow-x:auto;margin:14px 0}.bsum table{border-collapse:collapse;font-size:14px;min-width:560px;width:100%}
+.bsum th,.bsum td{border-bottom:1px solid var(--rule);padding:6px 8px;text-align:right}.bsum th:first-child,.bsum td:first-child{text-align:left}
+.bsum td b{font-weight:700}.bsum .pp{font-size:12px;color:var(--muted)}
+.btxt{white-space:pre-line}.btxt.cut{max-height:7.5em;overflow:hidden;-webkit-mask-image:linear-gradient(#000 60%,transparent)}
+.bmore{font:inherit;font-size:14px;background:none;border:0;padding:0;text-decoration:underline;cursor:pointer;color:var(--ink)}
+.role{font-family:var(--f-mono);font-size:11.5px;border:1.5px solid var(--rule);border-radius:4px;padding:0 6px}
+.nday{border-left:4px solid var(--hl);padding:2px 0 2px 12px;margin:0 0 16px}.nday h3{margin:0 0 4px;font-size:16px}.nday ul{margin:0;padding-left:18px}
 ul.erratas{padding-left:18px;max-width:75ch}ul.erratas li{margin:0 0 8px}
 .shr{font:inherit;font-size:14px;font-weight:600;background:none;border:0;padding:0;color:var(--ink);text-decoration:underline;cursor:pointer}
 .shr:focus-visible{outline:2px solid var(--hl);outline-offset:2px}
@@ -198,7 +206,7 @@ footer a{color:var(--ink);font-weight:700}
 </header>
 <div class="bar"><div class="wrap barin">
   <nav class="tabs" aria-label="Secciones">
-    <a href="#inicio">Inicio</a><a href="#sumar">Frente Amplio</a><a href="#pp">PP</a><a href="#psoe">PSOE</a><a href="#vox">VOX</a><a href="#temas">Por tema</a><a href="#parati">Para ti</a><a href="#programas">Programas</a><a href="#votaciones">Votaciones</a><a href="#metodo" class="last">Método</a>
+    <a href="#inicio">Inicio</a><a href="#sumar">Frente Amplio</a><a href="#pp">PP</a><a href="#psoe">PSOE</a><a href="#vox">VOX</a><a href="#temas">Por tema</a><a href="#parati">Para ti</a><a href="#programas">Programas</a><a href="#votaciones">Votaciones</a><a href="#balance">Balance 2023</a><a href="#metodo" class="last">Método</a>
   </nav>
   <div class="sbox"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="gq" type="search" placeholder="Buscar: pensiones, alquiler, IVA…" aria-label="Buscar en todas las promesas"></div>
 </div></div>
@@ -211,7 +219,8 @@ footer a{color:var(--ink);font-weight:700}
     <div class="cgrid" id="cgrid"></div>
     <h3>Últimas promesas</h3>
     <div class="plist2" id="latest"></div>
-    <p><a href="#temas" class="cgo">Comparar a los cuatro por tema →</a></p>
+    <p><a href="#temas" class="cgo">Comparar a los cuatro por tema →</a> &nbsp; <a href="#novedades" class="cgo">Novedades →</a></p>
+    <div class="note"><strong>Nuevo: balance 2023-2026.</strong> Qué prometieron los partidos en 2023 y qué se hizo, con la prueba de cada promesa. <a href="#balance">Ver el balance →</a></div>
     <h3>Promesas por tema</h3>
     <div class="tscroll"><table class="ttable" id="matrix"></table></div>
     <p class="sub" style="margin-top:8px;font-size:14px">El número son los compromisos de campaña de cada partido en cada tema; «+N prog.», las medidas de su programa sobre ese tema. Pulsa para verlos. «—» significa que no hay ninguno.</p>
@@ -246,6 +255,24 @@ footer a{color:var(--ink);font-weight:700}
     <div id="plistall"></div>
   </section>
 
+  <section class="view" id="v-balance" aria-labelledby="h-bal">
+    <h2 id="h-bal">Balance 2023-2026</h2>
+    <p class="lede">Qué prometieron en 2023 el PP, el PSOE, Sumar y VOX, y qué se hizo durante la legislatura que acaba de terminar. Cada promesa, con el texto de su programa, su estado y la prueba oficial enlazada.</p>
+    <div class="note"><strong>Cómo leerlo.</strong> Por ahora están los tres primeros temas (vivienda, empleo y pensiones, e impuestos); el resto llegará tras el 29-N. Se recoge el texto tal como aparece en cada programa de 2023, por eso cada partido tiene un número distinto de promesas: depende de cuánto detalla su programa. Importa el papel de cada uno: el PSOE y Sumar gobernaron y podían aprobar sus promesas; el PP y VOX estaban en la oposición y solo podían impulsarlas en el Congreso o el Senado (por eso existe el estado «Impulsada sin éxito»). Los estados se explican en <a href="#metodo">Método</a>.</div>
+    <div class="bsum" id="bsum"></div>
+    <div class="chips" id="bchips-p" role="group" aria-label="Filtrar por partido"></div>
+    <div class="chips" id="bchips-t" role="group" aria-label="Filtrar por tema"></div>
+    <div class="chips" id="bchips-s" role="group" aria-label="Filtrar por estado"></div>
+    <p class="count" id="bcount"></p>
+    <div class="plist2" id="b23list"><p class="sub">Cargando…</p></div>
+  </section>
+
+  <section class="view" id="v-novedades" aria-labelledby="h-nov">
+    <h2 id="h-nov">Novedades</h2>
+    <p class="sub">Lo que se ha ido añadiendo a la web, del más reciente al más antiguo. También puedes seguirlo con un lector de noticias: <a href="https://trechodemenos.es/feed.xml">feed RSS</a>.</p>
+    <div id="nlist"></div>
+  </section>
+
   <section class="view" id="v-votaciones" aria-labelledby="h-vot">
     <h2 id="h-vot">Votaciones</h2>
     <p class="sub">Votaciones del Congreso de esta legislatura (desde 2023) relacionadas con las promesas y los programas, con quién las propuso, el voto de cada grupo y la fuente. De la más reciente a la más antigua.</p>
@@ -271,6 +298,9 @@ footer a{color:var(--ink);font-weight:700}
       <li><b>14/11/2026 · Votaciones.</b> Decretos de vivienda del 2/10/2026: aparecían como una sola votación. Fueron dos: el Real Decreto-ley 26/2026 (172 sí, 178 no) y el 27/2026 (166 sí, 184 no), con votos distintos del PNV y Coalición Canaria.</li>
       <li><b>14/11/2026 · Votaciones.</b> Primer decreto «ómnibus» (22/01/2025): la nota atribuía la abstención a Coalición Canaria. Fue de UPN.</li>
     </ul>
+
+    <h3 id="m-balance">Balance 2023-2026</h3>
+    <p>Para el balance se recogen las promesas de los programas de 2023 tema a tema, con el texto tal como aparece en el programa. Cada una se comprueba con documentos oficiales (BOE, Diario de Sesiones, Boletín de las Cortes, datos del INE o de la Seguridad Social) y, cuando no los hay, con prensa que cite la fuente. Si no se encuentra prueba ni a favor ni en contra, queda como «Sin evidencia», que no es lo mismo que «Incumplida». Se tiene en cuenta el papel de cada partido: quien está en la oposición no puede aprobar leyes por sí solo.</p>
 
     <h3>Estados de una promesa</h3>
     <p class="sub">El color solo indica el estado de la promesa, y siempre va con su nombre escrito. Los partidos no llevan color.</p>
@@ -298,8 +328,8 @@ footer a{color:var(--ink);font-weight:700}
 </main>
 <button class="totop" id="totop" aria-label="Volver arriba">↑</button>
 <footer><div class="wrap">
-  <div class="frow"><a href="#quienes">Quiénes somos</a><a href="#metodo">Método</a><a href="#erratas">Fe de erratas</a><a href="https://trechodemenos.es/promesas/">Índice de promesas</a><a href="mailto:info@trechodemenos.es">info@trechodemenos.es</a><a href="https://www.instagram.com/trechodemenos/" target="_blank" rel="noopener">Instagram</a><a href="https://x.com/TrechoDeMenos" target="_blank" rel="noopener">X</a></div>
-  TrechoDeMenos es un proyecto independiente y sin afiliación a ningún partido. «Sin evidencia» significa que no se ha encontrado prueba, no que esté demostrado que no existe. Próximamente: las promesas de los programas de 2023 y su balance.
+  <div class="frow"><a href="#quienes">Quiénes somos</a><a href="#metodo">Método</a><a href="#erratas">Fe de erratas</a><a href="#novedades">Novedades</a><a href="https://trechodemenos.es/feed.xml">RSS</a><a href="https://trechodemenos.es/promesas/">Índice de promesas</a><a href="mailto:info@trechodemenos.es">info@trechodemenos.es</a><a href="https://www.instagram.com/trechodemenos/" target="_blank" rel="noopener">Instagram</a><a href="https://x.com/TrechoDeMenos" target="_blank" rel="noopener">X</a></div>
+  TrechoDeMenos es un proyecto independiente y sin afiliación a ningún partido. «Sin evidencia» significa que no se ha encontrado prueba, no que esté demostrado que no existe. Ya puedes ver el <a href="#balance">balance de las promesas de 2023</a>.
 </div></footer>
 <script>
 const PROG_INFO={"PP": {"titulo": "La Reconstrucción Nacional", "url": "https://www.pp.es/wp-content/uploads/2026/11/LA-RECONSTRUCCION-NACIONAL.pdf", "presentado": "10/11/2026", "consultado": "12/11/2026", "paginas": 82, "total": 249, "vacias": [83, 109, 132, 164, 167, 173, 200, 210], "conContenido": 241, "noFiguran": ["C29-PP-10: derogar los decretos de vivienda (el programa deroga la Ley de Vivienda, medida 145)", "C29-PP-12: tres leyes de vivienda en los primeros 100 días", "C29-PP-15: garantizar el aborto en los hospitales públicos", "C29-PP-06: el IVA del 0 % en la luz (el programa lo limita a alimentos básicos, medida 180)"], "pdf": true}, "PSOE": {"titulo": "La fuerza de seguir avanzando", "url": "https://www.psoe.es/media-content/2026/11/PROGRAMAPSOE29N26.pdf", "pdf": true, "presentado": "15/11/2026", "consultado": "15/11/2026", "paginas": 114, "total": 500, "vacias": [], "conContenido": 500, "noFiguran": ["C29-PSOE-01: recuperar los dos decretos de vivienda que tumbó el Congreso (el programa sí recoge congelar los alquileres que superen los índices de referencia, medida 62)", "C29-PSOE-06: que quienes lleguen a Ceuta sin derecho a protección internacional vuelvan a Marruecos"], "aviso": "El documento repite algunas medidas con otro número (por ejemplo, la 100 y la 365, o la 372 y la 374); cada una se recoge una sola vez."}, "VOX": {"titulo": "Es sentido común", "url": "https://www.voxespana.es/wp-content/uploads/2026/11/Programa-completo-A5-1.pdf", "pdf": true, "presentado": "12/11/2026", "consultado": "13/11/2026", "paginas": 66, "total": 115, "vacias": [], "conContenido": 115, "noFiguran": ["C29-VOX-06: quitar los impuestos a las propinas", "C29-VOX-12: suprimir el Ministerio de Igualdad"]}};
@@ -516,6 +546,78 @@ function renderParati(k){
       ${rs.length||ms.length?"":`<p class="none">Nada específico para este perfil por ahora${PROG_INFO[p]?"":" (programa pendiente)"}.</p>`}</div>`;}).join("");
 }
 
+
+/* Balance 2023-2026 (se carga aparte para no hacer pesada la página) */
+const P23={PP:{n:"PP",ini:"PP"},PSOE:{n:"PSOE",ini:"PSOE"},SUMAR:{n:"Sumar (hoy en el Frente Amplio)",ini:"SUMAR"},VOX:{n:"VOX",ini:"VOX"}};
+const T23=["Vivienda","Empleo y pensiones","Impuestos"];
+const ST23=["Cumplida","Parcial","Impulsada sin éxito","Incumplida","Sin evidencia","No medible"];
+let B23=null, bstate={p:"todos",t:"todos",s:"todos",open:""};
+async function loadB23(){
+  if(B23) return B23;
+  for(const u of ["balance2023.json","https://trechodemenos.es/balance2023.json"]){
+    try{ const r=await fetch(u,{cache:"no-cache"}); if(r.ok){ B23=await r.json(); return B23; } }catch(_){}
+  }
+  throw new Error("no se pudo cargar");
+}
+function b23HTML(b){
+  const k=KEY[b.st]||"pend", largo=b.txt.length>420;
+  return `<article class="prom" id="${esc(b.id)}">
+    <div class="pwho"><span class="ini">${esc(P23[b.p].ini)}</span>${esc(P23[b.p].n)} <span class="role" title="Papel del partido en la legislatura 2023-2026">${esc(b.papel)}</span></div>
+    <p class="ptxt btxt${largo?" cut":""}">«${esc(b.txt)}»</p>
+    ${largo?`<button type="button" class="bmore">Leer entero</button>`:""}
+    <div class="pmeta"><span>Programa de 2023${b.pag?`, pág. ${esc(b.pag)}`:""}</span><span>${esc(b.t)}</span><span class="st" style="--c:var(--${k})">${esc(b.st)}</span></div>
+    <details class="more"${bstate.open===b.id?" open":""}><summary>Ver comprobación y prueba</summary><div class="dbody">
+      ${b.nota?`<p>${glos(esc(b.nota))}</p>`:""}
+      ${b.fin?`<p><strong>${esc(b.fin)}.</strong> ${glos(esc(b.freno))}</p>`:(b.freno?`<p>${glos(esc(b.freno))}</p>`:"")}
+      <div class="dlinks">${b.prueba?`<a href="${esc(b.prueba)}" target="_blank" rel="noopener">Prueba${b.tp?" · "+esc(b.tp):""}</a>`:""}${b.fuente?`<a href="${esc(b.fuente)}" target="_blank" rel="noopener">Programa de 2023</a>`:""}${b.fv?`<span class="muted">Comprobado el ${fmt(b.fv)}</span>`:""}<a class="pid" href="#${esc(b.id)}">${esc(b.id)}</a></div>
+    </div></details>
+  </article>`;
+}
+async function renderBalance(){
+  const L=document.getElementById("b23list");
+  try{ await loadB23(); }catch(e){ L.innerHTML=`<p class="sub">No se ha podido cargar el balance. Prueba a recargar la página.</p>`; return; }
+  const parties=["SUMAR","PP","PSOE","VOX"].filter(p=>B23.some(b=>b.p===p));
+  // Resumen por partido y estado
+  document.getElementById("bsum").innerHTML=`<table><thead><tr><th>Partido (papel)</th>${ST23.map(s=>`<th>${esc(s)}</th>`).join("")}<th>Total</th></tr></thead><tbody>${
+    parties.map(p=>{const xs=B23.filter(b=>b.p===p);return `<tr><td><b>${esc(P23[p].n)}</b> <span class="pp">${esc(xs[0].papel)}</span></td>${ST23.map(s=>{const n=xs.filter(b=>b.st===s).length;return `<td>${n?`<a href="#balance" data-bp="${p}" data-bs="${esc(s)}">${n}</a>`:'<span class="muted">0</span>'}</td>`;}).join("")}<td><b>${xs.length}</b></td></tr>`;}).join("")
+  }</tbody></table>`;
+  const chip=(grp,val,lab,n)=>`<button type="button" class="chip" data-g="${grp}" data-v="${esc(val)}" aria-pressed="${bstate[grp]===val}">${esc(lab)}${n!=null?` <b>${n}</b>`:""}</button>`;
+  document.getElementById("bchips-p").innerHTML=chip("p","todos","Todos los partidos",B23.length)+parties.map(p=>chip("p",p,P23[p].n,B23.filter(b=>b.p===p).length)).join("");
+  document.getElementById("bchips-t").innerHTML=chip("t","todos","Todos los temas")+T23.map(t=>chip("t",t,t,B23.filter(b=>b.t===t&&(bstate.p==="todos"||b.p===bstate.p)).length)).join("");
+  document.getElementById("bchips-s").innerHTML=chip("s","todos","Todos los estados")+ST23.map(s=>chip("s",s,s,B23.filter(b=>b.st===s&&(bstate.p==="todos"||b.p===bstate.p)&&(bstate.t==="todos"||b.t===bstate.t)).length)).join("");
+  const xs=B23.filter(b=>(bstate.p==="todos"||b.p===bstate.p)&&(bstate.t==="todos"||b.t===bstate.t)&&(bstate.s==="todos"||b.st===bstate.s))
+    .sort((a,b)=>parties.indexOf(a.p)-parties.indexOf(b.p)||T23.indexOf(a.t)-T23.indexOf(b.t));
+  document.getElementById("bcount").textContent=`${xs.length} ${xs.length===1?"promesa":"promesas"}`;
+  L.innerHTML=xs.map(b23HTML).join("")||`<p class="none">No hay promesas con estos filtros.</p>`;
+  if(bstate.open){ const el=document.getElementById(bstate.open); if(el) setTimeout(()=>el.scrollIntoView({block:"start"}),30); bstate.open=""; }
+}
+document.addEventListener("click",e=>{
+  const c=e.target.closest("#v-balance .chip"); if(c){ bstate[c.dataset.g]=c.dataset.v; renderBalance(); return; }
+  const a=e.target.closest("#bsum a[data-bp]"); if(a){ e.preventDefault(); bstate={p:a.dataset.bp,t:"todos",s:a.dataset.bs,open:""}; renderBalance(); document.getElementById("bcount").scrollIntoView({block:"start"}); return; }
+  const m=e.target.closest(".bmore"); if(m){ const t=m.previousElementSibling; t.classList.remove("cut"); m.remove(); }
+});
+
+/* Novedades: hitos de la web y compromisos de campaña por día */
+const NOVEDADES=[
+ ["2026-11-15","Balance de la legislatura 2023-2026: 281 promesas de 2023 sobre vivienda, empleo y pensiones, e impuestos, con su estado y su prueba."],
+ ["2026-11-15","Programa del PSOE: 167 medidas concretas de 500, cruzadas con lo que ha dicho en campaña."],
+ ["2026-11-15","Nueva sección «Para ti»: las medidas que te afectan según tu situación. Botones para compartir cada promesa."],
+ ["2026-11-15","Quiénes somos y fe de erratas, en Método. Nuevo contacto: info@trechodemenos.es."],
+ ["2026-11-14","Cada promesa y cada medida tiene su propia página. Glosario de términos parlamentarios en Votaciones."],
+ ["2026-11-14","Votaciones del Congreso ampliadas y ordenadas por tema, con datos oficiales."],
+ ["2026-11-13","Programa de VOX: 56 medidas concretas de 115."],
+ ["2026-11-12","Programa del PP: 102 medidas concretas de 249."]
+];
+function renderNovedades(){
+  const dias={};
+  NOVEDADES.forEach(([f,t])=>{(dias[f]=dias[f]||{h:[],c:[]}).h.push(t);});
+  ROWS.forEach(r=>{(dias[r.fecha]=dias[r.fecha]||{h:[],c:[]}).c.push(r);});
+  document.getElementById("nlist").innerHTML=Object.keys(dias).sort().reverse().map(f=>{
+    const d=dias[f], porP=PARTIES.map(p=>[p,d.c.filter(r=>r.p===p).length]).filter(x=>x[1]);
+    return `<div class="nday"><h3>${fmt(f)}</h3><ul>${d.h.map(t=>`<li>${esc(t)}</li>`).join("")}${d.c.length?`<li>${d.c.length} ${d.c.length===1?"compromiso de campaña":"compromisos de campaña"} (${porP.map(([p,n])=>`${esc(CAND[p].a)} ${n}`).join(", ")}): ${d.c.map(r=>`<a href="#${esc(r.id)}">${esc(r.id)}</a>`).join(", ")}</li>`:""}</ul></div>`;
+  }).join("");
+}
+
 /* Búsqueda global */
 function renderBuscar(q){
   const s=norm(q.trim());
@@ -594,6 +696,9 @@ function route(){
   if(a==="parati"){ renderParati(b); show("v-parati","parati"); window.scrollTo(0,0); return; }
   if(a!=="buscar") document.getElementById("gq").value="";
   if(a==="buscar"){ const q=raw.slice(7); document.getElementById("gq").value=q; renderBuscar(q); show("v-buscar",""); return; }
+  if(a==="balance"){ show("v-balance","balance"); window.scrollTo(0,0); renderBalance(); return; }
+  if(a==="novedades"){ renderNovedades(); show("v-novedades",""); window.scrollTo(0,0); return; }
+  if(/^(pp|psoe|sumar|vox)-(viv|emp|imp)-\d+$/.test(h)){ bstate={p:"todos",t:"todos",s:"todos",open:raw.toUpperCase()}; show("v-balance","balance"); renderBalance(); return; }
   if(a==="votaciones"){ renderVotos(b||"todos"); show("v-votaciones","votaciones"); window.scrollTo(0,0); return; }
   if(a==="quienes"||a==="erratas"){ show("v-metodo","metodo"); const el=document.getElementById(a); if(el) setTimeout(()=>el.scrollIntoView({block:"start"}),30); return; }
   if(["programas","metodo"].includes(a)){ show("v-"+a,a); window.scrollTo(0,0); return; }
