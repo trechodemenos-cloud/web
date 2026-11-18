@@ -190,6 +190,7 @@ for mm in PROWS:
 <h1>{e(mm['txt'])}</h1>
 <div class="card">{f'<span class="tag">{e(mm["cifra"])}</span>' if mm.get('cifra') else ''}
 {f'<p>Relación con lo dicho en campaña: {rel_html}</p>' if rel else ''}
+{('<p>Votaciones del Congreso relacionadas: ' + ' · '.join(f'{e(v["titulo"])} ({e(v["fecha"])}, {e(v["res"].lower())})' for v in VOTOS if mm["id"] in v.get("rel", [])) + '. <a href="/#votaciones">Ver votaciones →</a></p>') if any(mm["id"] in v.get("rel", []) for v in VOTOS) else ''}
 <p class="muted" style="font-size:15px">Resumen fiel de la medida tal como aparece en el programa oficial, presentado el {e(I['presentado'])}. Solo recogemos las medidas concretas y medibles.</p>
 <p style="margin:12px 0 0"><a class="btn alt" href="{e(prog_url(mm))}" target="_blank" rel="noopener">Ver en el programa oficial</a><a class="btn" href="/#{e(mm['id'])}">Ver en la web interactiva</a></p>
 <p class="muted" style="font-size:13px;margin:10px 0 0">Referencia: {e(mm['id'])}</p></div>
