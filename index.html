@@ -329,6 +329,7 @@ footer a{color:var(--ink);font-weight:700}
     <h3 id="erratas">Fe de erratas</h3>
     <p class="sub">Cuando corregimos algo ya publicado, lo anotamos aquí con su fecha.</p>
     <ul class="erratas">
+      <li><b>24/11/2026 · Coincidencias.</b> «Educación de 0 a 3 años para todas las familias»: VOX aparecía con «No incluye una medida así», pero su programa la recoge en la medida 94 («educación de 0 a 3 años gratuita»). Corregido: coinciden los cuatro partidos.</li>
       <li><b>14/11/2026 · Votaciones.</b> Ley para prohibir a empresas y fondos comprar viviendas (15/09/2026): habíamos publicado el resultado que dio la prensa (44 sí, 179 no y 124 abstenciones). El resultado oficial del Congreso es 44 sí, 175 no y 127 abstenciones.</li>
       <li><b>14/11/2026 · Votaciones.</b> Decretos de vivienda del 2/10/2026: aparecían como una sola votación. Fueron dos: el Real Decreto-ley 26/2026 (172 sí, 178 no) y el 27/2026 (166 sí, 184 no), con votos distintos del PNV y Coalición Canaria.</li>
       <li><b>14/11/2026 · Votaciones.</b> Primer decreto «ómnibus» (22/01/2025): la nota atribuía la abstención a Coalición Canaria. Fue de UPN.</li>
@@ -663,6 +664,7 @@ document.addEventListener("click",e=>{
 
 /* Novedades: hitos de la web y compromisos de campaña por día */
 const NOVEDADES=[
+  ["2026-11-24","Corrección en «En lo que coinciden»: la educación de 0 a 3 años también está en el programa de VOX (medida 94). Coinciden los cuatro partidos."],
   ["2026-11-24","Nuevas secciones: «Compara tú» (elige partidos y tema y míralos en columnas), «En lo que coinciden» (10 medidas que proponen dos o más partidos en sus programas) y, en Método, los criterios escritos para marcar cada estado de una promesa. Preparada la sección «Pactos» y el bloque de resultados oficiales para después del 29-N."],
   ["2026-11-23","Compromisos del 23 de noviembre: seis nuevos (cuatro del PP en la entrevista de Feijóo en Espejo Público: derogar la Ley de Amnistía, nueva ley de eutanasia, ningún ministro en el Constitucional y proporcionalidad en TVE; el impuesto a las fortunas de más de 100 millones que propuso Sánchez en X, y la equiparación salarial de policías y guardias civiles que dijo Abascal en Segovia). El Frente Amplio repitió compromisos ya apuntados. El Congreso no votó hoy: la Diputación Permanente está convocada el jueves 26."],
   ["2026-11-22","Compromisos del 22 de noviembre: dos nuevos (Pacto Nacional del Agua del PP en el mitin de Feijóo en Murcia y frenar el turismo masivo cerrando pisos turísticos ilegales, del Frente Amplio en el mitin de Colau en Las Palmas de Gran Canaria). El PSOE y VOX no hicieron hoy compromisos concretos nuevos."],
@@ -757,7 +759,7 @@ const RESULTADOS=null;
 const PACTOS=[];
 /* ===== En lo que coinciden (comprobado en los programas oficiales) ===== */
 const COINCIDENCIAS=[
- {t:"Educación",a:"Educación de 0 a 3 años para todas las familias",m:{SUMAR:[92],PP:[163],PSOE:[157]},d:"Cambia el cómo: el Frente Amplio habla de plazas públicas gratuitas garantizadas; el PP, de gratuidad al final de la legislatura con el Estado pagando la mitad; el PSOE, de universalizarla con más escuelas públicas."},
+ {t:"Educación",a:"Educación de 0 a 3 años para todas las familias",m:{SUMAR:[92],PP:[163],PSOE:[157],VOX:[94]},d:"Cambia el cómo: el Frente Amplio habla de plazas públicas gratuitas garantizadas; el PP, de gratuidad al final de la legislatura con el Estado pagando la mitad; el PSOE, de universalizarla con más escuelas públicas; VOX la incluye, gratuita, dentro de su medida 94 de apoyo a las familias."},
  {t:"Empleo y pensiones",a:"Subir las pensiones con el IPC",m:{SUMAR:[349],PP:[108],PSOE:[100]},d:"El Frente Amplio y el PSOE proponen además llevarlo a la Constitución."},
  {t:"Impuestos",a:"Que quien cobra el salario mínimo no pague IRPF",m:{SUMAR:[264],PP:[177]},d:""},
  {t:"Empleo y pensiones",a:"Fijar por ley el salario mínimo en relación con el salario medio",m:{SUMAR:[292],PSOE:[87]},d:"Los dos ponen el listón en el 60 % del salario medio."},
