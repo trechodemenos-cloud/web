@@ -206,6 +206,7 @@ footer a{color:var(--ink);font-weight:700}
 .coin{background:var(--sheet);border:1.5px solid var(--rule);border-radius:10px;padding:14px 16px;margin:0 0 16px}.coin h3{margin:2px 0 4px;font-size:19px}.coin .cols4{margin-top:10px}.coin .mini{margin:0}.coin .none{font-size:14px;margin:0;padding:10px 12px;border:1.5px dashed var(--rule);border-radius:8px}
 .seats{display:flex;height:22px;border-radius:4px;overflow:hidden;margin:8px 0 4px;border:1.5px solid var(--ink)}.seats span{background:var(--ink);border-right:1.5px solid var(--paper)}.seats span.off{background:var(--sheet)}
 .restab{border-collapse:collapse;width:100%;font-size:15px}.restab td,.restab th{padding:6px 8px 6px 0;border-top:1.5px solid var(--rule);text-align:left}.restab td.n{font-family:var(--f-mono);text-align:right}
+.precif{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:10px 0 18px}.precif>div{background:var(--sheet);border:1.5px solid var(--rule);border-radius:8px;padding:12px 14px}.precif strong{display:block;font-family:var(--f-display);font-weight:900;font-size:34px;line-height:1.1}@media (max-width:600px){.precif{grid-template-columns:1fr 1fr}}
 .sumbox{font-size:20px;font-weight:700;margin:10px 0}
 </style>
 </head>
@@ -238,7 +239,7 @@ footer a{color:var(--ink);font-weight:700}
     <h3>Promesas por tema</h3>
     <div class="tscroll"><table class="ttable" id="matrix"></table></div>
     <p class="sub" style="margin-top:8px;font-size:14px">El número son los compromisos de campaña de cada partido en cada tema; «+N prog.», las medidas de su programa sobre ese tema. Pulsa para verlos. «—» significa que no hay ninguno.</p>
-    <div class="note"><strong>¿Por qué todas están «Pendiente de verificar»?</strong> Son promesas para la próxima legislatura: solo se podrán comprobar cuando empiece. Entonces cada una tendrá su veredicto, con fecha y con la prueba enlazada. Los criterios están en <a href="#metodo">Método</a><a href="#criterios">Criterios</a>.</div>
+    <div class="note"><strong>¿Por qué todas están «Pendiente de verificar»?</strong> Son promesas para la próxima legislatura: solo se podrán comprobar cuando empiece. Entonces cada una tendrá su veredicto, con fecha y con la prueba enlazada. Los criterios están en <a href="#criterios">Método</a>.</div>
   </section>
 
   <section class="view" id="v-cand" aria-live="polite"></section>
@@ -276,6 +277,34 @@ footer a{color:var(--ink);font-weight:700}
     <h2 id="h-pac">Pactos</h2>
     <p class="sub">Después del 29-N, cada acuerdo para formar Gobierno (de investidura o de coalición) se cruza punto por punto con los programas de quienes lo firman: qué entra de cada uno, qué se queda fuera y qué es nuevo. Con el texto del acuerdo enlazado.</p>
     <div id="pac-list"></div>
+  </section>
+
+  <section class="view" id="v-prensa" aria-labelledby="h-pre">
+    <h2 id="h-pre">Prensa</h2>
+    <p class="sub">Todo lo que un periodista necesita para conocer TrechoDeMenos, citarlo o usar sus datos.</p>
+    <h3>Qué es</h3>
+    <p class="lede" style="font-size:19px">TrechoDeMenos es un proyecto independiente que apunta, con su fuente, lo que prometen los partidos en campaña y en sus programas, y comprueba durante la legislatura si se cumple, con la prueba oficial enlazada. Sigue al Frente Amplio, el PP, el PSOE y VOX con el mismo método y en el mismo orden (alfabético). No tiene afiliación con ningún partido.</p>
+    <h3>En cifras</h3>
+    <div class="precif" id="pre-cifras"></div>
+    <h3>Cómo trabajamos</h3>
+    <ul class="erratas">
+      <li><b>Mismo criterio para los cuatro.</b> Mismas fuentes, mismo formato y mismo orden. Las reglas están en <a href="#metodo">Método</a>.</li>
+      <li><b>Fuentes.</b> Programas oficiales de cada partido, actos de campaña (con fecha, lugar y quién lo dijo) y documentos oficiales: BOE, Congreso y datos públicos.</li>
+      <li><b>Veredictos con prueba.</b> Ninguna promesa cambia de estado sin un documento oficial enlazado. Los <a href="#criterios">criterios de cada estado</a> están escritos de antemano.</li>
+      <li><b>Errores en público.</b> Cada corrección queda anotada con su fecha en la <a href="#erratas">Fe de erratas</a>.</li>
+      <li><b>Sin encuestas.</b> Solo publicamos resultados oficiales.</li>
+    </ul>
+    <h3>Cómo citarnos</h3>
+    <div class="note">«Según TrechoDeMenos (trechodemenos.es), …». Puedes usar y reproducir nuestros datos citando la fuente con el enlace. Cada promesa tiene su propia página para enlazarla, por ejemplo <a href="https://trechodemenos.es/promesa/C29-PP-16/">trechodemenos.es/promesa/C29-PP-16</a>.</div>
+    <h3>Material para descargar</h3>
+    <ul class="erratas">
+      <li><a href="https://trechodemenos.es/prensa/TrechoDeMenos-dosier.pdf">Dosier de presentación (PDF, 1 página)</a></li>
+      <li><a href="https://trechodemenos.es/prensa/logo-horizontal.png">Logo horizontal (PNG, 2000 × 600)</a></li>
+      <li><a href="https://trechodemenos.es/prensa/logo-simbolo.png">Símbolo (PNG, 1024 × 1024)</a> · <a href="https://trechodemenos.es/prensa/logo-simbolo.svg">SVG</a></li>
+      <li>Colores: negro #14181F, amarillo #FFD60A y fondo #F3F4F1. Tipografía: Schibsted Grotesk.</li>
+    </ul>
+    <h3>Contacto</h3>
+    <p>Escríbenos a <a href="mailto:info@trechodemenos.es">info@trechodemenos.es</a>: respondemos a entrevistas, consultas sobre un dato o propuestas de colaboración. También estamos en Instagram y en X como <b>@TrechoDeMenos</b>.</p>
   </section>
 
   <section class="view" id="v-buscar" aria-live="polite">
@@ -393,7 +422,7 @@ footer a{color:var(--ink);font-weight:700}
 </main>
 <button class="totop" id="totop" aria-label="Volver arriba">↑</button>
 <footer><div class="wrap">
-  <div class="frow"><a href="#quienes">Quiénes somos</a><a href="#metodo">Método</a><a href="#erratas">Fe de erratas</a><a href="#privacidad">Privacidad</a><a href="#novedades">Novedades</a><a href="#balance">Balance 2023</a><a href="https://trechodemenos.es/feed.xml">RSS</a><a href="https://trechodemenos.es/promesas/">Índice de promesas</a><a href="mailto:info@trechodemenos.es">info@trechodemenos.es</a><a href="https://www.instagram.com/trechodemenos/" target="_blank" rel="noopener">Instagram</a><a href="https://x.com/TrechoDeMenos" target="_blank" rel="noopener">X</a></div>
+  <div class="frow"><a href="#quienes">Quiénes somos</a><a href="#metodo">Método</a><a href="#criterios">Criterios</a><a href="#prensa">Prensa</a><a href="#erratas">Fe de erratas</a><a href="#privacidad">Privacidad</a><a href="#novedades">Novedades</a><a href="#balance">Balance 2023</a><a href="https://trechodemenos.es/feed.xml">RSS</a><a href="https://trechodemenos.es/promesas/">Índice de promesas</a><a href="mailto:info@trechodemenos.es">info@trechodemenos.es</a><a href="https://www.instagram.com/trechodemenos/" target="_blank" rel="noopener">Instagram</a><a href="https://x.com/TrechoDeMenos" target="_blank" rel="noopener">X</a></div>
   TrechoDeMenos es un proyecto independiente y sin afiliación a ningún partido. «Sin evidencia» significa que no se ha encontrado prueba, no que esté demostrado que no existe. Ya puedes ver el <a href="#balance">balance de las promesas de 2023</a>.
 </div></footer>
 <script>
@@ -664,6 +693,7 @@ document.addEventListener("click",e=>{
 
 /* Novedades: hitos de la web y compromisos de campaña por día */
 const NOVEDADES=[
+  ["2026-11-24","Nueva página de Prensa: qué es TrechoDeMenos, cifras al día, cómo citarnos, dosier y logos para descargar, y contacto."],
   ["2026-11-24","Corrección en «En lo que coinciden»: la educación de 0 a 3 años también está en el programa de VOX (medida 94). Coinciden los cuatro partidos."],
   ["2026-11-24","Nuevas secciones: «Compara tú» (elige partidos y tema y míralos en columnas), «En lo que coinciden» (10 medidas que proponen dos o más partidos en sus programas) y, en Método, los criterios escritos para marcar cada estado de una promesa. Preparada la sección «Pactos» y el bloque de resultados oficiales para después del 29-N."],
   ["2026-11-23","Compromisos del 23 de noviembre: seis nuevos (cuatro del PP en la entrevista de Feijóo en Espejo Público: derogar la Ley de Amnistía, nueva ley de eutanasia, ningún ministro en el Constitucional y proporcionalidad en TVE; el impuesto a las fortunas de más de 100 millones que propuso Sánchez en X, y la equiparación salarial de policías y guardias civiles que dijo Abascal en Segovia). El Frente Amplio repitió compromisos ya apuntados. El Congreso no votó hoy: la Diputación Permanente está convocada el jueves 26."],
@@ -835,6 +865,9 @@ function route(){
   if(p){ renderCand(p,b||"todos"); show("v-cand",a); window.scrollTo(0,0); return; }
   if(a==="tema"||a==="temas"){ renderCompara(b,""); show("v-compara","temas"); return; }
   if(a==="compara"){ const [,,c]=h.split("/"); renderCompara(b,c); show("v-compara","temas"); window.scrollTo(0,0); return; }
+  if(a==="prensa"){ const n=Object.keys(PROGRAMAS).reduce((a,p)=>a+progN(p),0), up=(document.getElementById("upd")||{}).textContent||"";
+    document.getElementById("pre-cifras").innerHTML=[[ROWS.length,"compromisos de campaña"],[n,"medidas de los programas"],[VOTOS.length,"votaciones del Congreso"],[4,"partidos, mismo método"]].map(([v,t])=>`<div><strong>${v.toLocaleString("es-ES")}</strong><span class="muted"> ${t}</span></div>`).join("")+`<p class="sub" style="grid-column:1/-1;margin:4px 0 0">${esc(up)}.</p>`;
+    show("v-prensa",""); window.scrollTo(0,0); return; }
   if(a==="coincidencias"){ renderCoin(b); show("v-coincidencias","coincidencias"); window.scrollTo(0,0); return; }
   if(a==="pactos"){ renderPactos(); show("v-pactos","pactos"); window.scrollTo(0,0); return; }
   if(a==="criterios"){ show("v-metodo","metodo"); const el=document.getElementById("criterios"); if(el) setTimeout(()=>el.scrollIntoView({block:"start"}),30); return; }
