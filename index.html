@@ -200,6 +200,13 @@ ol.rules{max-width:78ch;padding-left:22px}ol.rules li{margin:0 0 8px}
 footer{border-top:2px solid var(--ink);padding:22px 0 40px;font-size:14px;color:var(--muted)}
 footer .frow{display:flex;flex-wrap:wrap;gap:8px 18px;margin-bottom:8px}
 footer a{color:var(--ink);font-weight:700}
+.cols3{grid-template-columns:repeat(3,1fr)}.cols2{grid-template-columns:repeat(2,1fr)}
+@media (max-width:600px){.cols3,.cols2{grid-template-columns:1fr}}
+.crit{border-collapse:collapse;width:100%;font-size:15px;line-height:1.4;margin:8px 0 18px}.crit th,.crit td{text-align:left;vertical-align:top;border-top:1.5px solid var(--rule);padding:9px 10px 9px 0}.crit th{font-family:var(--f-mono);font-size:12px;font-weight:600;color:var(--muted)}.crit td:first-child{white-space:nowrap;font-weight:600}
+.coin{background:var(--sheet);border:1.5px solid var(--rule);border-radius:10px;padding:14px 16px;margin:0 0 16px}.coin h3{margin:2px 0 4px;font-size:19px}.coin .cols4{margin-top:10px}.coin .mini{margin:0}.coin .none{font-size:14px;margin:0;padding:10px 12px;border:1.5px dashed var(--rule);border-radius:8px}
+.seats{display:flex;height:22px;border-radius:4px;overflow:hidden;margin:8px 0 4px;border:1.5px solid var(--ink)}.seats span{background:var(--ink);border-right:1.5px solid var(--paper)}.seats span.off{background:var(--sheet)}
+.restab{border-collapse:collapse;width:100%;font-size:15px}.restab td,.restab th{padding:6px 8px 6px 0;border-top:1.5px solid var(--rule);text-align:left}.restab td.n{font-family:var(--f-mono);text-align:right}
+.sumbox{font-size:20px;font-weight:700;margin:10px 0}
 </style>
 </head>
 <body>
@@ -212,13 +219,14 @@ footer a{color:var(--ink);font-weight:700}
 </header>
 <div class="bar"><div class="wrap barin">
   <nav class="tabs" aria-label="Secciones">
-    <a href="#inicio">Inicio</a><a href="#sumar">Frente Amplio</a><a href="#pp">PP</a><a href="#psoe">PSOE</a><a href="#vox">VOX</a><a href="#temas">Por tema</a><a href="#parati">Para ti</a><a href="#programas">Programas</a><a href="#votaciones">Votaciones</a><a href="#balance">Balance 2023</a><a href="#metodo" class="last">Método</a>
+    <a href="#inicio">Inicio</a><a href="#sumar">Frente Amplio</a><a href="#pp">PP</a><a href="#psoe">PSOE</a><a href="#vox">VOX</a><a href="#temas">Por tema</a><a href="#compara">Compara</a><a href="#parati">Para ti</a><a href="#coincidencias">Coincidencias</a><a href="#pactos" id="nav-pactos" hidden>Pactos</a><a href="#programas">Programas</a><a href="#votaciones">Votaciones</a><a href="#balance">Balance 2023</a><a href="#metodo" class="last">Método</a>
   </nav>
   <div class="sbox"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="gq" type="search" placeholder="Buscar: pensiones, alquiler, IVA…" aria-label="Buscar en todas las promesas" title="Buscar"></div>
 </div></div>
 
 <main id="main" class="wrap">
   <section class="view" id="v-inicio" aria-labelledby="h-ini">
+    <div id="ini-res" hidden></div>
     <h2 id="h-ini">Lo que prometen para el 29‑N</h2>
     <p class="lede">Los compromisos del Frente Amplio, el PP, el PSOE y VOX en la campaña (de sus candidatos, portavoces y programas), con fecha, lugar y fuente. Durante la legislatura comprobaremos si se cumplen, con la prueba enlazada.</p>
     <p class="sub" id="ini-stats"></p>
@@ -230,7 +238,7 @@ footer a{color:var(--ink);font-weight:700}
     <h3>Promesas por tema</h3>
     <div class="tscroll"><table class="ttable" id="matrix"></table></div>
     <p class="sub" style="margin-top:8px;font-size:14px">El número son los compromisos de campaña de cada partido en cada tema; «+N prog.», las medidas de su programa sobre ese tema. Pulsa para verlos. «—» significa que no hay ninguno.</p>
-    <div class="note"><strong>¿Por qué todas están «Pendiente de verificar»?</strong> Son promesas para la próxima legislatura: solo se podrán comprobar cuando empiece. Entonces cada una tendrá su veredicto, con fecha y con la prueba enlazada. Los criterios están en <a href="#metodo">Método</a>.</div>
+    <div class="note"><strong>¿Por qué todas están «Pendiente de verificar»?</strong> Son promesas para la próxima legislatura: solo se podrán comprobar cuando empiece. Entonces cada una tendrá su veredicto, con fecha y con la prueba enlazada. Los criterios están en <a href="#metodo">Método</a><a href="#criterios">Criterios</a>.</div>
   </section>
 
   <section class="view" id="v-cand" aria-live="polite"></section>
@@ -247,6 +255,27 @@ footer a{color:var(--ink);font-weight:700}
     <p class="sub">Elige tu situación y mira qué propone cada partido que te afecte directamente, con su fuente. Mismo criterio para los cuatro: la selección se hace por las palabras de cada medida y la revisamos a mano. Si echas algo en falta, escríbenos.</p>
     <div class="chips" id="pchips" role="group" aria-label="Perfiles"></div>
     <div class="cols4" id="pcols"></div>
+  </section>
+
+  <section class="view" id="v-compara" aria-labelledby="h-cmp">
+    <h2 id="h-cmp">Compara tú</h2>
+    <p class="sub">Elige los partidos que quieras comparar (dos, tres o los cuatro) y un tema. Verás sus compromisos de campaña y las medidas de su programa, uno al lado del otro. Siempre en el orden de siempre (alfabético por nombre del partido).</p>
+    <div class="chips" id="cmp-p" role="group" aria-label="Partidos que se comparan"></div>
+    <div class="chips" id="cmp-t" role="group" aria-label="Tema"></div>
+    <div class="cols4" id="cmp-cols"></div>
+  </section>
+
+  <section class="view" id="v-coincidencias" aria-labelledby="h-coin">
+    <h2 id="h-coin">En lo que coinciden</h2>
+    <p class="sub">Medidas en las que dos o más partidos proponen lo mismo en su programa oficial. Solo entra una coincidencia cuando la medida es la misma (aunque cambie la cifra o el detalle, que se indica); si solo se parecen de lejos, no entra. El partido que no la propone aparece igual, con «No incluye una medida así».</p>
+    <div class="chips" id="coin-t" role="group" aria-label="Filtrar por tema"></div>
+    <div id="coin-list"></div>
+  </section>
+
+  <section class="view" id="v-pactos" aria-labelledby="h-pac">
+    <h2 id="h-pac">Pactos</h2>
+    <p class="sub">Después del 29-N, cada acuerdo para formar Gobierno (de investidura o de coalición) se cruza punto por punto con los programas de quienes lo firman: qué entra de cada uno, qué se queda fuera y qué es nuevo. Con el texto del acuerdo enlazado.</p>
+    <div id="pac-list"></div>
   </section>
 
   <section class="view" id="v-buscar" aria-live="polite">
@@ -321,6 +350,25 @@ footer a{color:var(--ink);font-weight:700}
     <h3>Estados de una promesa</h3>
     <p class="sub">El color solo indica el estado de la promesa, y siempre va con su nombre escrito. Los partidos no llevan color.</p>
     <div class="stdef" id="stdef"></div>
+    <h3 id="criterios">Cuándo se marca cada estado</h3>
+    <p class="sub">Estos criterios se fijan antes de empezar la legislatura para que ningún veredicto dependa de la opinión de quien lo pone. Son los mismos para los cuatro partidos.</p>
+    <div class="tscroll"><table class="crit">
+      <tr><th>Estado</th><th>Se marca cuando…</th><th>Prueba que hace falta</th></tr>
+      <tr><td>Pendiente de verificar</td><td>Es el estado de salida de toda promesa del 29-N. Se mantiene hasta que haya algo que comprobar.</td><td>La fuente donde se dijo o se escribió (acto, fecha, enlace).</td></tr>
+      <tr><td>En trámite</td><td>Hay una iniciativa viva para cumplirla: proyecto o proposición de ley registrados, anteproyecto aprobado por el Consejo de Ministros o decreto-ley pendiente de convalidar.</td><td>Boletín Oficial de las Cortes (BOCG) o referencia del Consejo de Ministros.</td></tr>
+      <tr><td>Cumplida</td><td>Lo esencial de lo prometido (la cifra, la norma o la medida concreta) está aprobado y en vigor, o ejecutado. Un anuncio, una promesa repetida o un proyecto de ley no bastan.</td><td>BOE (ley, decreto u orden), acuerdo del Consejo de Ministros con efectos o dato oficial (INE, Seguridad Social, Hacienda).</td></tr>
+      <tr><td>Parcial</td><td>Se ha aprobado o hecho solo una parte, o con menos alcance: menos cifra, más tarde o para menos gente de lo prometido. La ficha dice qué falta.</td><td>La misma que para «Cumplida».</td></tr>
+      <tr><td>Impulsada sin éxito</td><td>El partido la llevó al Congreso o al Senado, o votó a favor de una iniciativa para conseguirla, y no salió adelante (rechazada, no convalidada o decaída).</td><td>Votación oficial del Congreso o del Senado, o BOCG.</td></tr>
+      <tr><td>Incumplida</td><td>Solo cuando ya no se puede cumplir: ha vencido el plazo que se puso el propio partido, ha terminado la legislatura o se ha aprobado lo contrario; y siempre que el partido tuviera cómo hacerlo (gobernaba o tenía votos para impulsarla).</td><td>El documento oficial de lo aprobado o del fin del plazo.</td></tr>
+      <tr><td>Sin evidencia</td><td>Se ha buscado en las fuentes oficiales y no hay prueba ni a favor ni en contra. Se vuelve a revisar en cada repaso.</td><td>Se indica dónde se ha buscado.</td></tr>
+      <tr><td>No medible</td><td>La promesa no tiene cifra, plazo ni acción concreta que se pueda comprobar. Se decide al apuntarla, no después.</td><td>La propia promesa, tal como se dijo.</td></tr>
+    </table></div>
+    <ul class="erratas">
+      <li><b>Plazos.</b> Si la promesa trae su propio plazo («en los primeros cien días», «en 2027»), se mide en esa fecha. Si no trae plazo, se mide al final de la legislatura; mientras tanto puede estar En trámite o Parcial, pero no Incumplida.</li>
+      <li><b>Gobierno y oposición.</b> Al partido que gobierna se le mide por lo que aprueba y ejecuta. Al que está en la oposición, por lo que impulsa (iniciativas propias y votos) y por lo que hace donde gobierna; si su iniciativa sale adelante, la promesa cuenta como Cumplida.</li>
+      <li><b>Quién decide.</b> Una persona revisa la prueba antes de cambiar un estado y anota la fecha. La inteligencia artificial puede proponer, pero no decide.</li>
+      <li><b>Si no estás de acuerdo.</b> Escríbenos con el documento a info@trechodemenos.es. Si tienes razón, se cambia y queda anotado en la Fe de erratas.</li>
+    </ul>
     <h3>Cuando una promesa se queda «Impulsada sin éxito»</h3>
     <p class="sub">Cada ficha indica cómo terminó (rechazada en votación, decreto no convalidado, bloqueada en trámite, decaída por la disolución de las Cortes o aprobada pero sin obligar al Gobierno) y quién la frenó, con el voto de cada grupo y, como motivo, solo lo que cada grupo dijo en público. Si el propio partido que la prometía ayudó a frenarla, también figura.</p>
     <h3>Glosario parlamentario</h3>
@@ -615,6 +663,7 @@ document.addEventListener("click",e=>{
 
 /* Novedades: hitos de la web y compromisos de campaña por día */
 const NOVEDADES=[
+  ["2026-11-24","Nuevas secciones: «Compara tú» (elige partidos y tema y míralos en columnas), «En lo que coinciden» (10 medidas que proponen dos o más partidos en sus programas) y, en Método, los criterios escritos para marcar cada estado de una promesa. Preparada la sección «Pactos» y el bloque de resultados oficiales para después del 29-N."],
   ["2026-11-23","Compromisos del 23 de noviembre: seis nuevos (cuatro del PP en la entrevista de Feijóo en Espejo Público: derogar la Ley de Amnistía, nueva ley de eutanasia, ningún ministro en el Constitucional y proporcionalidad en TVE; el impuesto a las fortunas de más de 100 millones que propuso Sánchez en X, y la equiparación salarial de policías y guardias civiles que dijo Abascal en Segovia). El Frente Amplio repitió compromisos ya apuntados. El Congreso no votó hoy: la Diputación Permanente está convocada el jueves 26."],
   ["2026-11-22","Compromisos del 22 de noviembre: dos nuevos (Pacto Nacional del Agua del PP en el mitin de Feijóo en Murcia y frenar el turismo masivo cerrando pisos turísticos ilegales, del Frente Amplio en el mitin de Colau en Las Palmas de Gran Canaria). El PSOE y VOX no hicieron hoy compromisos concretos nuevos."],
   ["2026-11-22","Corrección: en C29-VOX-05 (mitin de Abascal en Estepona, 11/10) la fuente enlazada era la crónica centrada en las pensiones. Ahora enlaza la crónica que recoge la frase sobre vivienda y el texto usa sus palabras literales."],
@@ -701,6 +750,70 @@ function renderMetodo(){
   document.getElementById("stdef").innerHTML = ST.map(x=>`<div style="--c:var(--${x[1]})"><strong>${x[0]}</strong><br><span class="muted">${x[2]}</span></div>`).join("");
 }
 
+
+/* ===== Resultados del 29-N (se rellena con datos oficiales del Ministerio del Interior) ===== */
+const RESULTADOS=null;
+/* ===== Pactos de investidura o coalición (vacío hasta que haya acuerdos) ===== */
+const PACTOS=[];
+/* ===== En lo que coinciden (comprobado en los programas oficiales) ===== */
+const COINCIDENCIAS=[
+ {t:"Educación",a:"Educación de 0 a 3 años para todas las familias",m:{SUMAR:[92],PP:[163],PSOE:[157]},d:"Cambia el cómo: el Frente Amplio habla de plazas públicas gratuitas garantizadas; el PP, de gratuidad al final de la legislatura con el Estado pagando la mitad; el PSOE, de universalizarla con más escuelas públicas."},
+ {t:"Empleo y pensiones",a:"Subir las pensiones con el IPC",m:{SUMAR:[349],PP:[108],PSOE:[100]},d:"El Frente Amplio y el PSOE proponen además llevarlo a la Constitución."},
+ {t:"Impuestos",a:"Que quien cobra el salario mínimo no pague IRPF",m:{SUMAR:[264],PP:[177]},d:""},
+ {t:"Empleo y pensiones",a:"Fijar por ley el salario mínimo en relación con el salario medio",m:{SUMAR:[292],PSOE:[87]},d:"Los dos ponen el listón en el 60 % del salario medio."},
+ {t:"Empleo y pensiones",a:"Jornada laboral de 37,5 horas",m:{SUMAR:[334],PSOE:[108]},d:"El Frente Amplio la fija para 2026 y añade 35 horas en el sector público; el PSOE habla de completarla e incentivar las 35 horas en los convenios."},
+ {t:"Instituciones y justicia",a:"Votar desde los 16 años",m:{SUMAR:[242],PSOE:[372]},d:""},
+ {t:"Instituciones y justicia",a:"Que los jueces elijan a los 12 vocales judiciales del CGPJ",m:{PP:[72],VOX:[100]},d:""},
+ {t:"Instituciones y justicia",a:"Fiscal General con mandato de cinco años que no cesa con el Gobierno",m:{PP:[70],PSOE:[436]},d:""},
+ {t:"Vivienda",a:"Recuperar en horas las viviendas okupadas",m:{PP:[157],VOX:[31]},d:"Cambia el plazo: 48 horas en el PP y menos de 24 horas en VOX."},
+ {t:"Vivienda",a:"Bajar el IVA de la compra de la primera vivienda",m:{PP:[153],VOX:[34]},d:"Cambia la cifra: del 10 % al 4 % para menores de 40 años en el PP; al 0 % en la vivienda nueva en VOX."}
+];
+function renderCompara(ts,ps){
+  const sel=(ps?ps.split("+").map(x=>PARTIES.find(p=>p.toLowerCase()===x)).filter(Boolean):PARTIES.slice());
+  const S=sel.length?PARTIES.filter(p=>sel.includes(p)):PARTIES.slice();
+  const all=t=>ROWS.filter(r=>r.t===t).length+PROWS.filter(m=>m.t===t).length;
+  const usados=TEMAS.filter(t=>all(t)); const cur=usados.find(t=>slug(t)===ts)||usados[0];
+  const href=(t,arr)=>`#compara/${slug(t)}/${arr.map(p=>p.toLowerCase()).join("+")}`;
+  document.getElementById("cmp-p").innerHTML='<span class="sub" style="margin:0">Partidos:</span> '+PARTIES.map(p=>{const on=S.includes(p);const nx=on?S.filter(x=>x!==p):PARTIES.filter(x=>S.includes(x)||x===p);return `<a class="chip" href="${href(cur,nx.length?nx:S)}" aria-pressed="${on}">${esc(CAND[p].n)}</a>`;}).join("");
+  document.getElementById("cmp-t").innerHTML='<span class="sub" style="margin:0">Tema:</span> '+usados.map(t=>`<a class="chip" href="${href(t,S)}" ${t===cur?'aria-current="page"':""}>${esc(t)}</a>`).join("");
+  const box=document.getElementById("cmp-cols"); box.className="cols4"+(S.length===3?" cols3":S.length<=2?" cols2":"");
+  box.innerHTML=S.map(p=>{const rs=ROWS.filter(r=>r.p===p&&r.t===cur).sort(byDate), ms=PROWS.filter(m=>m.p===p&&m.t===cur);
+    return `<div><div class="colh">${iniHTML(p)}<div><div class="cname">${esc(CAND[p].n)}</div><div class="cparty">${rs.length} en campaña · ${PROG_INFO[p]?ms.length+" en el programa":"programa pendiente"}</div></div></div>
+      ${rs.map(r=>`<div class="mini">${esc(r.txt)}<div class="pmeta">${fmt(r.fecha)} · ${esc(r.acto)} · <a href="#${esc(r.id)}">detalles</a></div></div>`).join("")}
+      ${ms.map(m=>`<div class="mini prog">${esc(m.txt)}<div class="pmeta"><span class="ptag">Programa</span> Medida ${m.n} · <a href="#${esc(m.id)}">detalles</a></div></div>`).join("")}
+      ${!rs.length&&!ms.length?`<p class="none">Nada sobre ${esc(cur.toLowerCase())} por ahora.</p>`:""}</div>`;}).join("");
+}
+function renderCoin(ts){
+  const ts2=[...new Set(COINCIDENCIAS.map(c=>c.t))]; const cur=ts2.find(t=>slug(t)===ts)||"";
+  document.getElementById("coin-t").innerHTML=`<a class="chip" href="#coincidencias" ${!cur?'aria-current="page"':""}>Todas <b>${COINCIDENCIAS.length}</b></a>`+TEMAS.filter(t=>ts2.includes(t)).map(t=>`<a class="chip" href="#coincidencias/${slug(t)}" ${t===cur?'aria-current="page"':""}>${esc(t)} <b>${COINCIDENCIAS.filter(c=>c.t===t).length}</b></a>`).join("");
+  document.getElementById("coin-list").innerHTML=COINCIDENCIAS.filter(c=>!cur||c.t===cur).map(c=>{
+    const quien=PARTIES.filter(p=>c.m[p]).map(p=>CAND[p].n);
+    return `<article class="coin"><div class="pmeta">${esc(c.t)} · ${quien.length} de 4 partidos</div><h3>${esc(c.a)}</h3>${c.d?`<p class="sub" style="margin:0">${esc(c.d)}</p>`:""}
+    <div class="cols4">${PARTIES.map(p=>{const ns=c.m[p]||[];const ms=ns.map(n=>PROWS.find(m=>m.p===p&&m.n===n)).filter(Boolean);
+      return `<div><div class="colh">${iniHTML(p)}<div><div class="cname">${esc(CAND[p].n)}</div></div></div>${ms.length?ms.map(m=>`<div class="mini prog">${esc(m.txt)}<div class="pmeta"><span class="ptag">Programa</span> Medida ${m.n} · <a href="#${esc(m.id)}">detalles</a></div></div>`).join(""):`<p class="none">No incluye una medida así.</p>`}</div>`;}).join("")}</div></article>`;}).join("");
+}
+function renderPactos(){
+  const el=document.getElementById("pac-list");
+  if(!PACTOS.length){el.innerHTML=`<div class="note"><strong>Todavía no hay ningún acuerdo.</strong> Cuando se firme el primero, aparecerá aquí cruzado con los programas de quienes lo firman. Mientras, puedes ver <a href="#coincidencias">en lo que ya coinciden los programas</a>.</div>`;return;}
+  el.innerHTML=PACTOS.map(a=>`<article class="coin"><div class="pmeta">${fmt(a.fecha)} · ${esc(a.firman.map(p=>CAND[p]?CAND[p].n:p).join(", "))}</div><h3>${esc(a.titulo)}</h3><p class="sub" style="margin:0">${(a.src||[]).map(([n,u])=>`<a href="${esc(u)}">${esc(n)}</a>`).join(" · ")}</p>
+   ${a.puntos.map(pt=>`<div class="mini" style="margin-top:8px">${esc(pt.txt)}<div class="pmeta">${pt.nuevo?"No estaba en ningún programa de los firmantes":a.firman.map(p=>{const ids=(pt.rel||[]).filter(i=>i.startsWith("PRG-"+p+"-"));return `${esc(CAND[p]?CAND[p].n:p)}: ${ids.length?ids.map(i=>`<a href="#${i}">medida ${+i.split("-")[2].replace(/\D/g,"")}</a>`).join(", "):"no estaba en su programa"}`;}).join(" · ")}</div></div>`).join("")}</article>`).join("");
+}
+function renderResultados(){
+  const box=document.getElementById("ini-res"); const R=RESULTADOS;
+  document.getElementById("nav-pactos").hidden=!(R||PACTOS.length);
+  if(!R){box.hidden=true;return;} box.hidden=false;
+  const ps=R.partidos.filter(x=>x.esc>0), tot=ps.reduce((a,x)=>a+x.esc,0);
+  box.innerHTML=`<h2>Resultados del 29-N</h2><p class="sub">${esc(R.escrutado)} escrutado · Fuente: <a href="${esc(R.fuente[1])}">${esc(R.fuente[0])}</a>. Solo datos oficiales; no publicamos encuestas.</p>
+   <div class="tscroll"><table class="restab"><tr><th>Candidatura</th><th style="text-align:right">Escaños</th><th style="text-align:right">Votos</th><th style="text-align:right">%</th></tr>${ps.map(x=>`<tr><td>${esc(x.n)}</td><td class="n">${x.esc}</td><td class="n">${x.votos.toLocaleString("es-ES")}</td><td class="n">${String(x.pct).replace(".",",")}</td></tr>`).join("")}</table></div>
+   <h3>Las cuentas</h3><p class="sub">Marca las candidaturas que quieras sumar. Para la investidura hace falta mayoría absoluta (176 de ${tot}) en la primera votación, o más síes que noes en la segunda. Es solo aritmética: no indicamos quién debería pactar con quién.</p>
+   <div class="chips" id="sumchips">${ps.map((x,i)=>`<button type="button" class="chip" aria-pressed="false" data-i="${i}">${esc(x.n)} <b>${x.esc}</b></button>`).join("")}</div>
+   <div class="seats" id="sumbar"></div><div class="sumbox" id="sumtxt"></div><hr style="border:0;border-top:1.5px solid var(--rule);margin:22px 0">`;
+  const upd=()=>{const on=[...box.querySelectorAll('#sumchips .chip[aria-pressed="true"]')].map(b=>ps[+b.dataset.i]);const n=on.reduce((a,x)=>a+x.esc,0);
+    document.getElementById("sumbar").innerHTML=on.map(x=>`<span style="width:${x.esc/tot*100}%"></span>`).join("")+`<span class="off" style="width:${(tot-n)/tot*100}%"></span>`;
+    document.getElementById("sumtxt").textContent=on.length?`Suman ${n} escaños: ${n>=176?"llegan":"no llegan"} a la mayoría absoluta (176)${n<176?`; les faltan ${176-n}.`:"."}`:"Marca una o varias candidaturas.";};
+  box.querySelectorAll("#sumchips .chip").forEach(b=>b.addEventListener("click",()=>{b.setAttribute("aria-pressed",b.getAttribute("aria-pressed")!=="true");upd();}));upd();
+}
+
 /* Navegación */
 function show(id,nav){
   document.querySelectorAll(".view").forEach(v=>v.classList.remove("on"));
@@ -719,6 +832,10 @@ function route(){
   const p=PARTIES.find(x=>x.toLowerCase()===a);
   if(p){ renderCand(p,b||"todos"); show("v-cand",a); window.scrollTo(0,0); return; }
   if(a==="tema"||a==="temas"){ renderTemas(b); show("v-temas","temas"); return; }
+  if(a==="compara"){ const [,,c]=h.split("/"); renderCompara(b,c); show("v-compara","compara"); window.scrollTo(0,0); return; }
+  if(a==="coincidencias"){ renderCoin(b); show("v-coincidencias","coincidencias"); window.scrollTo(0,0); return; }
+  if(a==="pactos"){ renderPactos(); show("v-pactos","pactos"); window.scrollTo(0,0); return; }
+  if(a==="criterios"){ show("v-metodo","metodo"); const el=document.getElementById("criterios"); if(el) setTimeout(()=>el.scrollIntoView({block:"start"}),30); return; }
   if(a==="parati"){ renderParati(b); show("v-parati","parati"); window.scrollTo(0,0); return; }
   if(a!=="buscar") document.getElementById("gq").value="";
   if(a==="buscar"){ const q=raw.slice(7); document.getElementById("gq").value=q; renderBuscar(q); show("v-buscar",""); return; }
@@ -736,7 +853,7 @@ let gqT; document.getElementById("gq").addEventListener("input",e=>{clearTimeout
 const tt=document.getElementById("totop");
 window.addEventListener("scroll",()=>tt.classList.toggle("on",window.scrollY>900),{passive:true});
 tt.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
-renderInicio(); renderVotos(); renderProgramas(); renderMetodo(); route();
+renderInicio(); renderResultados(); renderVotos(); renderProgramas(); renderMetodo(); route();
 window.addEventListener("hashchange",route);
 /* Enlaces externos (fuentes, PDFs, redes): siempre en pestaña nueva */
 document.addEventListener("click",e=>{const l=e.target.closest("a[href]"); if(l&&/^https?:/i.test(l.href)&&l.host!==location.host){l.target="_blank"; l.rel="noopener noreferrer";}},true);
